@@ -69,6 +69,12 @@ public class ConnectionInfo {
 
 	}
 
+	public void executeUpdate() throws SQLException {
+		//execute prepared statement
+		ps.executeUpdate();
+		
+	}
+
 
 
 }

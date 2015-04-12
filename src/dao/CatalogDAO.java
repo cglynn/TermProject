@@ -157,8 +157,24 @@ private void addRankingsReviewsToProduct(Product product) throws SQLException
 		}
 }
 
+//Edit Product Information.  Name/Description/Department.
+public void editProduct(int productId, String name, String description, int department) throws SQLException {
+	//create connection
+	connection = new ConnectionInfo();
 
-public void editProduct() {
+	//create query
+	String sql = "UPDATE product SET name=?, description=?, department=? WHERE productId = ?";
+
+	//create prepared statement
+	connection.ps = connection.conn.prepareStatement(sql);
+	
+	//set variable in prepared statement
+	connection.ps.setString(1, name);
+	connection.ps.setString(2, description);
+	connection.ps.setInt(3, department);
+	connection.ps.setInt(4, productId);
+	
+	connection.executeUpdate();
   }
 
   public void removeProduct() {

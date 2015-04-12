@@ -35,7 +35,15 @@ public class CatalogServlet extends HttpServlet {
 			session.setAttribute("catalogTextFilter", catalogFilter);
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);
+		}
 		
+		//Check to see if Edit Product was clicked.
+		if(request.getParameter("editProduct") != null){
+			String productId = request.getParameter("productId");
+			HttpSession session = request.getSession();
+			session.setAttribute("productId", productId);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
+			dispatcher.forward(request,  response);
 		}
 	}
 

@@ -53,8 +53,25 @@ else{
 	String filterDepartment = (String)session.getAttribute("departmentFilter");
 	String catalogFilter = (String)session.getAttribute("catalogTextFilter");
 	
-	out.print("<form class='boxSignup' name='SignupForm' action='CatalogServlet' method='post'>Filter Text: <input type='text' id='filterText' name='filterText' size='20' value='"+ catalogFilter + "' /><select id='departmentDropDown' name='departmentDropDown'><option value='Makeup'>Makeup</option><option value='Skin'>Skin</option><option value='Fragrance'>Fragrance</option><option value='Tools'>Tools</option><input type='submit' name='filterCatalog' value='Filter Catalog' /></form>");
-
+	out.print("<form class='boxSignup' name='FilterForm' action='CatalogServlet' method='post'>Filter Text: <input type='text' id='filterText' name='filterText' size='20' value='"+ catalogFilter + "' /><select id='departmentDropDown' name='departmentDropDown'><option value=''>Select Department</option>");
+	
+	Vector<String> departments = catalog.getDepartments();
+	ListIterator<String> departmentsIterator = departments.listIterator();
+	String departmentName = null;
+	while(departmentsIterator.hasNext())
+	{
+		departmentName = departmentsIterator.next();
+		//Option is Selected
+		if(filterDepartment.contains(departmentName) )
+		{
+			out.print("<option value='" + departmentName + "' selected>"+departmentName+"</option>");
+		}
+		else{
+			out.print("<option value='" + departmentName + "'>"+departmentName+"</option>");
+		}
+	}
+	//Finish Drop Down filter
+	out.print("<input type='submit' name='filterCatalog' value='Filter Catalog' /></form>");
 	
 	out.print("<p><center>Hello " + user.getFirstName() + " " + user.getLastName() + " welcome to Cosmetics Catalog</center></p>");
 	
@@ -62,10 +79,6 @@ else{
 	ListIterator<Product> products = catalog.getProducts();
 	
 	String department = null;
-	
-
-	
-	
 	
 	//Number of products per row.
 	int productPerRow = 4;
@@ -76,18 +89,7 @@ else{
 	{
 		Product product = products.next();	
 
-		
-		switch(product.getDepartment())
-		{
-		case 0: department = Department.Makeup.name();
-				break;
-		case 1: department = Department.Skin.name();
-				break;
-		case 2: department = Department.Fragrance.name();
-				break;
-		default : department = Department.Tools.name();
-				break;
-		}
+		department = catalog.getDepartmentByValue(product.getDepartment());
 		
 		//Filter. department is chosen and product name or description contains text. display product. 
 		if((department.indexOf(filterDepartment) != -1) && ((product.name.indexOf(catalogFilter) != -1)    || (product.description.indexOf(catalogFilter) != -1)))
@@ -114,10 +116,14 @@ else{
 			while(images.hasNext())
 			{
 				Image image = images.next();
-				//out.print("<p>Image Name: " + image.location +"</p>");
 				out.print("<img src='Images/"+ image.location + "' height='50' width='50'>");
 			}
 			
+			//Edit product Link for Sellers and Admins
+			if(user.getUserType() != userType.buyer.value){
+					out.print(
+				    		  "<form name='editProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Edit Product' name='editProduct' /></form>");
+			}
 			//Display sellers
 			ListIterator<ProductSeller> sellers = product.getSellers();
 			while(sellers.hasNext())

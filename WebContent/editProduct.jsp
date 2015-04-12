@@ -4,15 +4,26 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Index Page</title>
+<title>Edit Product</title>
 </head>
 <body>
 <%@ include file="nav.jsp" %>
 <%@ include file="logout.jsp" %>
 <%@ page import="model.User" %>
+<%@ page import="model.Catalog" %>
+<%@ page import="model.Product" %>
+<%@ page import="model.ReviewsRanking" %>
+<%@ page import="model.ProductSeller" %>
+<%@ page import="model.Image" %>
+<%@ page import= "java.util.Vector" %>
+<%@ page import = "java.util.ListIterator" %>
+<%@ page import = "enums.Department" %>
+<%@ page import = "enums.userType" %>
 <% 
 
 User user = (User)session.getAttribute("user");
+String productId = (String)session.getAttribute("productId");
+
 boolean loggedIn = false;
 if(user != null)
 {
@@ -38,8 +49,72 @@ if (!loggedIn)
 			
 	      out.print("You are not logged in.  Please go to login.jsp to log in.");
 		}
+
+else if(productId == null)
+{
+	out.print("You have reached this page in error.");
+}
+//User is logged in.
 else{
-	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "</p>");
+	//Check to ensure user is not buyer
+	if(user.getUserType() == userType.buyer.value)
+	{
+		out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + ".  Only Administrators and sellers are allowed here!</p>");
+	}
+	//user is seller or an administrator
+	else{
+		Catalog catalog = (Catalog)session.getAttribute("catalog");
+		Product product = catalog.getProductById(Integer.parseInt(productId));
+		
+		//If product not found.
+		if(null == product)
+		{
+			out.print("Woops!  Product not found.");
+		}
+		else{
+		String department = null;
+			
+
+			
+				//Display Product
+			out.print(
+			  		  "<form class='editProduct' name='editProductForm' action='EditProductServlet' method='post'><table width='200'><tr><td>Product Name:</td><td><input type='text' name='productName' size='20' value='" + product.getName() + "' /></td></tr><tr><td>Product Description:</td><td><input type='text' name='productDescription' size='45' width = '200px' value='"+product.getDescription()+"'/></td></tr><select id='departmentDropDown' name='departmentDropDown' >");
+			  		  
+				//Department DropDown
+				Vector<String> departments = catalog.getDepartments();
+				ListIterator<String> departmentsIterator = departments.listIterator();
+				String departmentName = null;
+				int i = 0;
+				while(departmentsIterator.hasNext())
+				{
+					departmentName = departmentsIterator.next();
+					//Option is Selected
+					if(catalog.getDepartmentByValue(product.getDepartment()) == departmentName)
+					{
+						out.print("<option value='" + i + "' selected>"+departmentName+"</option>");
+					}
+					else{
+						out.print("<option value='" + i + "'>"+departmentName+"</option>");
+					}
+					i++;
+				}
+				//Finish Drop Down filter
+				out.print("<tr><td><input type='submit' name='saveProduct' value='Save Product' /></td></tr></table></form>");
+				
+				//If Seller.  Display option to update Seller Fields.
+				if(user.getUserType() == userType.seller.value)
+				{
+					ProductSeller seller = product.getProductSellerById(user.getUserId());
+					//If seller already sells product pre-populate fields.
+					if(seller != null)
+					{
+						out.print(
+						  		  "<form class='editSellerInfo' name='editSellerInfoForm' action='EditProductServlet' method='post'><table><tr><td>Price:</td><td><input type='text' name='productPrice' size='20' value='" + seller.getPrice() + "' /></td></tr><tr><td>Shipping Cost:</td><td><input type='text' name='productShippingCost' size='20' value='"+ seller.getShippingCost() +"'/></td></tr><tr><td><input type='submit' name='saveSellingInformation' value='Save Selling Information' /></td></tr></table></form>");	
+					}
+				}
+				
+			}
+		}	
 }
 %>
 </body>

@@ -82,5 +82,23 @@ public class Product {
 	  this.department = department;
 	  this.isDeleted = isDeleted;
   }
+  
+  //Returns productSeller data if exists, else null
+  public ProductSeller getProductSellerById(int sellerId) {
+	  ProductSeller seller = null;
+	  ProductSeller temp = null;
+	  ListIterator<ProductSeller> sellersIterator = sellers.listIterator();
+	  while(sellersIterator.hasNext())
+	  {
+		  temp = sellersIterator.next();
+		  if(temp.sellerId == sellerId)
+		  {
+			  seller = temp;
+			  break;
+		  }
+	  }
+	  temp = null;
+	  return seller;
+  }
 
 }

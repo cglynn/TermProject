@@ -69,4 +69,14 @@
     <servlet-name>CatalogServlet</servlet-name>
     <url-pattern>/CatalogServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditProductServlet</display-name>
+    <servlet-name>EditProductServlet</servlet-name>
+    <servlet-class>controller.EditProductServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditProductServlet</servlet-name>
+    <url-pattern>/EditProductServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
