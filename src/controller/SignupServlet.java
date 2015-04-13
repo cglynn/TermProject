@@ -36,6 +36,10 @@ public class SignupServlet extends HttpServlet {
 		{
 			msg = " Please enter username.";
 		}
+		else if(username.length() > 20)
+		{
+			msg = msg + " Username can only be 20 characters long.<br>";
+		}
 		
 		//If user name is blank.  return with message.
 		if(!msg.equals("")){
@@ -81,6 +85,10 @@ public class SignupServlet extends HttpServlet {
 			{
 				msg = msg + " Please enter First Name.<br>";
 			}
+			else if(firstName.length() > 20)
+			{
+				msg = msg + " First name can only be 20 characters long.<br>";
+			}
 			
 			//Verify last name
 			String lastName = request.getParameter("lastName");
@@ -88,6 +96,10 @@ public class SignupServlet extends HttpServlet {
 			if (lastName.length() == 0)
 			{
 				msg =msg + " Please enter Last Name.<br>";
+			}
+			else if(lastName.length() > 20)
+			{
+				msg = msg + " Last name can only be 20 characters long.<br>";
 			}
 			
 			//Verify phoneNumber
@@ -97,6 +109,10 @@ public class SignupServlet extends HttpServlet {
 			{
 				msg =msg + " Please enter Phone Number.<br>";
 			}
+			else if(phoneNumber.length() > 20)
+			{
+				msg = msg + " Phone number can only be 20 characters long.<br>";
+			}
 			
 			//Verify email
 			String email = request.getParameter("email");
@@ -104,6 +120,10 @@ public class SignupServlet extends HttpServlet {
 			if (email.length() == 0)
 			{
 				msg =msg + " Please enter Email.<br>";
+			}
+			else if(email.length() > 20)
+			{
+				msg = msg + " Email can only be 20 characters long.<br>";
 			}
 			
 			//Verify Street
@@ -113,6 +133,10 @@ public class SignupServlet extends HttpServlet {
 			{
 				msg =msg + " Please enter Street.<br>";
 			}
+			else if(street.length() > 20)
+			{
+				msg = msg + " Street can only be 20 characters long.<br>";
+			}
 			
 			//Verify City
 			String city = request.getParameter("city");
@@ -120,6 +144,10 @@ public class SignupServlet extends HttpServlet {
 			if (city.length() == 0)
 			{
 				msg =msg + " Please enter City.<br>";
+			}
+			else if(city.length() > 20)
+			{
+				msg = msg + " City can only be 20 characters long.<br>";
 			}
 			
 			//Verify State
@@ -129,13 +157,21 @@ public class SignupServlet extends HttpServlet {
 			{
 				msg =msg + " Please enter State.<br>";
 			}
+			else if(state.length() > 20)
+			{
+				msg = msg + " State can only be 20 characters long.<br>";
+			}
 			
-			//Verify State
+			//Verify Zip
 			String zip = request.getParameter("zip");
 			if(zip == null) zip = "";
 			if (zip.length() == 0)
 			{
 				msg =msg + " Please enter Zip.<br>";
+			}
+			else if(zip.length() > 20)
+			{
+				msg = msg + " Zip can only be 20 characters long.<br>";
 			}
 			
 			//Verify Password
@@ -145,13 +181,21 @@ public class SignupServlet extends HttpServlet {
 			{
 				msg = msg + " Please enter Password.<br>";
 			}
+			else if(password.length() > 20)
+			{
+				msg = msg + " Password can only be 20 characters long.<br>";
+			}
 			
-			//Verify last name
+			//Verify confirm Password
 			String confirmPassword = request.getParameter("confirmPassword");
 			if(confirmPassword == null) confirmPassword = "";
 			if (confirmPassword.length() == 0)
 			{
 				msg = msg + " Please enter Confirm Password.<br>";
+			}
+			else if(confirmPassword.length() > 20)
+			{
+				msg = msg + " Confirm Password can only be 20 characters long.<br>";
 			}
 			
 			//Verify Password and Confirm Password match

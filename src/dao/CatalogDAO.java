@@ -2,11 +2,13 @@ package dao;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.Product;
 import model.Catalog;
 import model.ReviewsRanking;
 import model.ProductSeller;
 import model.Image;
+
 import java.util.Vector;
 import java.util.ListIterator;
 
@@ -174,8 +176,96 @@ public void editProduct(int productId, String name, String description, int depa
 	connection.ps.setInt(3, department);
 	connection.ps.setInt(4, productId);
 	
-	connection.executeUpdate();
+	int affectedRows = connection.ps.executeUpdate();
+	
+    if (affectedRows == 0) {
+        throw new SQLException("Creating product seller info failed, no rows affected.");
+    }
   }
+
+//Edit Product Seller Information. Price/Shipping Cost.
+public void editProductSeller(int productId, int sellerId, double price, double shippingCost) throws SQLException, ClassNotFoundException {
+	//create connection
+	connection = new ConnectionInfo();
+
+	int productSellerId = doesProductSellerExist(productId, sellerId);
+	
+	//If Entry already exists, update entry.
+	if(productSellerId != -1)
+	{
+	
+		//create query
+		String sql = "UPDATE productSeller SET price=?, shippingCost=? WHERE productSellerId = ?";
+	
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setDouble(1, price);
+		connection.ps.setDouble(2, shippingCost);
+		connection.ps.setInt(3, productId);
+		
+		int affectedRows = connection.ps.executeUpdate();
+		
+        if (affectedRows == 0) {
+            throw new SQLException("Creating product seller info failed, no rows affected.");
+        }
+	}
+	//Else need to insert new row.
+	else
+	{
+		//create query
+		String sql = "Insert Into productSeller (sellerId, price, shippingCost, productId) Values (?,?,?,?) ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, sellerId);
+		connection.ps.setDouble(2, price);
+		connection.ps.setDouble(3, shippingCost);
+		connection.ps.setInt(4, productId);
+		
+        int affectedRows = connection.ps.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("Creating product seller info failed, no rows affected.");
+        }
+	}
+}
+
+//Returns -1 if entry does not exist, else productSellerId
+public int doesProductSellerExist(int productId, int sellerId) throws ClassNotFoundException, SQLException {
+	int productSellerId = -1;
+	
+	//create query
+	String sql = "SELECT productSellerId FROM productSeller WHERE sellerId = ? AND productId = ? ";
+	
+	//create prepared statement
+	connection.ps = connection.conn.prepareStatement(sql);
+	
+	//set variable in prepared statement
+	connection.ps.setInt(1, sellerId);
+	connection.ps.setInt(2, productId);
+	
+	connection.executeQuery();
+
+	try {
+		if(connection.result.next()) 
+		{
+			productSellerId = connection.result.getInt(1);
+		}
+	}
+	catch (SQLException ex) {
+		Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		return productSellerId;
+	}
 
   public void removeProduct() {
   }
@@ -198,16 +288,11 @@ public void editProduct(int productId, String name, String description, int depa
   public void removeItemWishList() {
   }
 
-  public void getProductsByDepartment() {
-  }
-
   public void deleteOrder() {
   }
 
   public void removeProductFromOrder() {
   }
 
-  public void searchProducts() {
-  }
 
 }

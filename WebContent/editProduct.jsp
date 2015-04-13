@@ -78,7 +78,7 @@ else{
 			
 				//Display Product
 			out.print(
-			  		  "<form class='editProduct' name='editProductForm' action='EditProductServlet' method='post'><table width='200'><tr><td>Product Name:</td><td><input type='text' name='productName' size='20' value='" + product.getName() + "' /></td></tr><tr><td>Product Description:</td><td><input type='text' name='productDescription' size='45' width = '200px' value='"+product.getDescription()+"'/></td></tr><select id='departmentDropDown' name='departmentDropDown' >");
+			  		  "<form class='editProduct' name='editProductForm' action='EditProductServlet' method='post'><table width='200'><tr><td>Product Name:</td><td><input type='text' name='productName' size='20' maxlength='20' value='" + product.getName() + "' /></td></tr><tr><td>Product Description:</td><td><input type='text' name='productDescription' size='45' maxlength='45' lenght='45' width = '200px' value='"+product.getDescription()+"'/></td></tr><tr><td>Product Department:</td><td><select id='departmentDropDown' name='departmentDropDown' >");
 			  		  
 				//Department DropDown
 				Vector<String> departments = catalog.getDepartments();
@@ -99,7 +99,7 @@ else{
 					i++;
 				}
 				//Finish Drop Down filter
-				out.print("<tr><td><input type='submit' name='saveProduct' value='Save Product' /></td></tr></table></form>");
+				out.print("</td></tr><tr><td><input type='submit' name='saveProduct' value='Save Product' /></td></tr></table></form>");
 				
 				//If Seller.  Display option to update Seller Fields.
 				if(user.getUserType() == userType.seller.value)
@@ -108,8 +108,9 @@ else{
 					//If seller already sells product pre-populate fields.
 					if(seller != null)
 					{
-						out.print(
-						  		  "<form class='editSellerInfo' name='editSellerInfoForm' action='EditProductServlet' method='post'><table><tr><td>Price:</td><td><input type='text' name='productPrice' size='20' value='" + seller.getPrice() + "' /></td></tr><tr><td>Shipping Cost:</td><td><input type='text' name='productShippingCost' size='20' value='"+ seller.getShippingCost() +"'/></td></tr><tr><td><input type='submit' name='saveSellingInformation' value='Save Selling Information' /></td></tr></table></form>");	
+						out.print("<form class='editSellerInfo' name='editSellerInfoForm' action='EditProductServlet' method='post'><table><tr><td>Price:</td><td><input type='text' name='productPrice' size='20' maxlength='20' value='" + seller.getPrice() + "' /></td></tr><tr><td>Shipping Cost:</td><td><input type='text' name='productShippingCost' size='20' maxlength='20' value='"+ seller.getShippingCost() +"'/></td></tr><tr><td><input type='submit' name='saveSellingInformation' value='Save Selling Information' /></td></tr></table></form>");	
+					}
+					else{out.print("<form class='editSellerInfo' name='editSellerInfoForm' action='EditProductServlet' method='post'><table><tr><td>Price:</td><td><input type='text' name='productPrice' size='20' maxlength='20' value='' /></td></tr><tr><td>Shipping Cost:</td><td><input type='text' name='productShippingCost' size='20' maxlength='20' value=''/></td></tr><tr><td><input type='submit' name='saveSellingInformation' value='Save Selling Information' /></td></tr></table></form>");	
 					}
 				}
 				

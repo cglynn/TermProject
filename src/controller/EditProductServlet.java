@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import model.Catalog;
 import dao.CatalogDAO;
+import model.User;
 
 /**
  * Servlet implementation class EditProductServlet
@@ -41,6 +42,10 @@ public class EditProductServlet extends HttpServlet {
 			{
 				msg = " Please enter Product Name.";
 			}
+			else if(productName.length() > 20)
+			{
+				msg = msg + " Product name can only be 20 characters long.<br>";
+			}
 			
 			//Verify Product Description
 			String productDescription = request.getParameter("productDescription");
@@ -48,6 +53,10 @@ public class EditProductServlet extends HttpServlet {
 			if (productDescription.length() == 0)
 			{
 				msg = msg + " Please enter Product Description.";
+			}
+			else if(productDescription.length() > 45)
+			{
+				msg = msg + " Product description can only be 45 characters long.<br>";
 			}
 			
 			//If issues with form display message
@@ -90,6 +99,12 @@ public class EditProductServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 				session.setAttribute("catalog", catalog);
+				
+				//If issues with form display message
+				if(!msg.equals("")){
+					request.setAttribute("msg", msg);
+				}
+				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
 				dispatcher.forward(request,  response);
 			}
@@ -99,15 +114,22 @@ public class EditProductServlet extends HttpServlet {
 		if(request.getParameter("saveSellingInformation") != null)
 		{
 			//Verify Product Price
+			Double doublePrice = (double) 0;
+			Double doubleShippingCost = (double) 0;
+			
 			String productPrice = request.getParameter("productPrice");
 			if(productPrice == null) productPrice = "";
 			if (productPrice.length() == 0)
 			{
 				msg = msg + " Please enter Product Price.";
 			}
+			else if(productPrice.length() > 20)
+			{
+				msg = msg + " Product price can only be 20 characters long.<br>";
+			}
 			else{
 				try {
-					Double.parseDouble(productPrice);
+					doublePrice = Double.parseDouble(productPrice);
 				}
 				catch (NumberFormatException nfe)
 				{
@@ -122,9 +144,13 @@ public class EditProductServlet extends HttpServlet {
 			{
 				msg = msg + " Please enter Product Shipping Cost.";
 			}
+			else if(productShippingCost.length() > 20)
+			{
+				msg = msg + " Product shipping cost can only be 20 characters long.<br>";
+			}
 			else{
 				try {
-					Double.parseDouble(productShippingCost);
+					doubleShippingCost = Double.parseDouble(productShippingCost);
 				}
 				catch (NumberFormatException nfe)
 				{
@@ -138,7 +164,52 @@ public class EditProductServlet extends HttpServlet {
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
 				dispatcher.forward(request,  response);
 			}
+			//update product seller information
 			else{
+				HttpSession session = request.getSession();
+				
+				//Update Data Base
+				CatalogDAO catalogData = new CatalogDAO();
+				try {
+					User user = (User)session.getAttribute("user");
+					try {
+						catalogData.editProductSeller(Integer.parseInt((String) session.getAttribute("productId")), user.getUserId(),doublePrice, doubleShippingCost );
+					} catch (ClassNotFoundException e) {
+						msg = msg + " Class Not found exception " + e.toString();
+						e.printStackTrace();
+					}
+				} catch (NumberFormatException | SQLException e) {
+					msg = "Number Format Exception " + e.toString();
+					e.printStackTrace();
+				}
+				
+				//Update product in Session, reload catalog to session.  In future may just update product in Session.
+				Catalog catalog = null;
+				catalogData = new CatalogDAO();
+				try {
+					catalog = catalogData.getCatalog();
+					
+				} catch (SQLException e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				} catch (Throwable e) {
+					
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}
+				try {
+					catalogData.connection.DB_Close();
+				} catch (Throwable e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}
+				session.setAttribute("catalog", catalog);
+				
+				//If issues with form display message
+				if(!msg.equals("")){
+					request.setAttribute("msg", msg);
+				}
+				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
 				dispatcher.forward(request,  response);
 			}

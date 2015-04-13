@@ -111,6 +111,15 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("catalog", catalog);
 				session.setAttribute("departmentFilter", "");
 				session.setAttribute("catalogTextFilter", "");
+				
+				//If issues with form display message
+				if(!msg.equals("")){
+					request.setAttribute("msg", msg);
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
+					dispatcher.forward(request,  response);
+				}
+				
+				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 				dispatcher.forward(request,  response);
 			}
