@@ -128,7 +128,7 @@ else{
 			while(sellers.hasNext())
 			{
 				ProductSeller seller = sellers.next();
-				out.print("<p>Seller Id: " + seller.getSellerCustomerName() +"</p>");
+				out.print("<p>Seller Id: " + seller.getSellerCompanyName() +"</p>");
 				out.print("<p>Price: " + seller.getPrice() +"</p>");
 				out.print("<p>Shipping: " + seller.getShippingCost() +"</p>");
 				if(user.getUserType() == userType.buyer.value)

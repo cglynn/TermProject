@@ -20,7 +20,7 @@ public class ProductSeller {
 	  return sellerId;
   }
   
-  public String getSellerCustomerName() {
+  public String getSellerCompanyName() {
 	  return companyName;
   }
 

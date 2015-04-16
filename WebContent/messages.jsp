@@ -9,9 +9,14 @@
 <body>
 <%@ include file="nav.jsp" %>
 <%@ page import="model.User" %>
+<%@ page import="model.Message" %>
+<%@ page import="model.Messages" %>
+<%@ page import= "java.util.Vector" %>
+<%@ page import = "java.util.ListIterator" %>
 <% 
 
 User user = (User)session.getAttribute("user");
+Messages messages = (Messages)session.getAttribute("messages");
 boolean loggedIn = false;
 if(user != null)
 {
@@ -35,10 +40,27 @@ if(msg != "")
 if (!loggedIn)
 		{
 			
-	      out.print("You are not logged in.  Please go to login.jsp to log in.");
+	      out.print("<center>You are not logged in.  Please go to login.jsp to log in.</center>");
 		}
 else{
-	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "</p>");
+	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + " welcome to your messages!</p>");
+	
+	ListIterator<Message> messagesIterator = messages.getMessages();
+	
+	//Start Table
+	out.print("<table width='1000' align='center' border='line'><tr><td align='center' width='200'>From</td><td align='center' width='800'>Message</td></tr>");
+
+	while(messagesIterator.hasNext())
+	{
+		Message message = messagesIterator.next();	
+			
+			//Display Messages
+			
+			out.print("<tr><td>" + message.getSenderName() + "</td><td>" + message.getMessage() + "</td></tr>");	
+	}
+	
+	//End Table
+	out.print("</table>");
 }
 %>
 </body>

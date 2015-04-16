@@ -89,4 +89,14 @@
     <servlet-name>NavServlet</servlet-name>
     <url-pattern>/NavServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>MessagesServlet</display-name>
+    <servlet-name>MessagesServlet</servlet-name>
+    <servlet-class>controller.MessagesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessagesServlet</servlet-name>
+    <url-pattern>/MessagesServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

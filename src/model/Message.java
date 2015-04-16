@@ -3,30 +3,51 @@ package model;
 
 public class Message {
 
-  public Integer messageId;
+  public int messageId;
 
-  public Integer senderId;
+  public int senderId;
 
   public String message;
 
-  public Integer newAttr;
+  public int receiverId;
+  
+  public String senderName;
 
-  public Integer receiverId;
 
-
-  public void getSenderId() {
+  public int getSenderId() {
+	  return this.senderId;
+  }
+  
+  public String getSenderName() {
+	  return this.senderName;
   }
 
-  public void getMessageId() {
+  public int getMessageId() {
+	  return this.messageId;
   }
 
-  public void getMessage() {
+  public String getMessage() {
+	  return this.message;
   }
 
-  public void message() {
+  public Message() {
+	  this.messageId = -1;
+	  this.senderId = -1;
+	  this.message = "";
+	  this.receiverId = -1;
+	  this.senderName = "";
+  }
+  
+  public Message(int messageId, int senderId, String message, int receiverId, String senderName) {
+	  this.messageId = messageId;
+	  this.senderId = senderId;
+	  this.message = message;
+	  this.receiverId = receiverId;
+	  this.senderName = senderName;
   }
 
-  public void getReceiverId() {
+  public int getReceiverId() {
+	  return this.receiverId;
   }
 
 }

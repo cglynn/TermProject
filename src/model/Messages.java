@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ListIterator;
 import java.util.Vector;
 
 public class Messages {
@@ -11,6 +12,11 @@ public class Messages {
   public Vector<Message>  messages;
 
   public void messages() {
+  }
+  
+  public ListIterator<Message> getMessages()
+  {
+	  return messages.listIterator();
   }
 
 }

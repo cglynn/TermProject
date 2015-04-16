@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Messages;
+import model.User;
+import dao.MessageDAO;
 
 /**
  * Servlet implementation class NavServlet
@@ -60,6 +64,33 @@ public class NavServlet extends HttpServlet {
 		//If Messages button clicked
 		if(request.getParameter("messages") != null)
 		{
+			//Load Messages
+			HttpSession session = request.getSession();
+			User user = (User)session.getAttribute("user");
+			String msg = "";
+			//Load user messages
+			Messages messages = new Messages();
+			MessageDAO messageData = new MessageDAO();
+			try {
+				messages = messageData.getMessageByUserId(user.getUserId());
+				messageData.connection.DB_Close();
+			} catch (SQLException e) {
+				
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			session.setAttribute("messages", messages);
+			
+			//If issues with form display message
+			if(!msg.equals("")){
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/messages.jsp");
+				dispatcher.forward(request,  response);
+			}
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/messages.jsp");
 			dispatcher.forward(request,  response);
 		}
