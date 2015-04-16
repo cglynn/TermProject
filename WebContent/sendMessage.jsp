@@ -16,7 +16,9 @@
 <% 
 
 User user = (User)session.getAttribute("user");
-Messages messages = (Messages)session.getAttribute("messages");
+String receiverIdString = (String)session.getAttribute("receiverId");
+int receiverId = Integer.parseInt(receiverIdString);
+String receiverName = (String)session.getAttribute("receiverName");
 boolean loggedIn = false;
 if(user != null)
 {
@@ -43,24 +45,22 @@ if (!loggedIn)
 	      out.print("<center>You are not logged in.  Please go to login.jsp to log in.</center>");
 		}
 else{
-	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + " welcome to your messages!</p>");
+	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + " welcome!</p>");
 	
-	ListIterator<Message> messagesIterator = messages.getMessages();
-	
-	//Start Table
-	out.print("<table width='1000' align='center' border='line'><tr><td align='center' width='200'>From</td><td align='center' width='800'>Message</td></tr>");
-
-	while(messagesIterator.hasNext())
+	if(receiverId < 1)
 	{
-		Message message = messagesIterator.next();	
-			
-			//Display Messages
-			
-			out.print("<tr><td>" + message.getSenderName() + "</td><td>" + message.getMessage() + "</td></tr>");	
+		out.print("<center>You have reached this page in error.  No receiver id specified.</center>");
 	}
-	
-	//End Table
-	out.print("</table>");
+	else{
+		if(receiverName != null)
+		{
+			out.print("<center>Sending message to " + receiverName + ".<center>");
+		}
+		
+		out.print(
+	    		  "<form name='MessageForm' action='MessagesServlet' method='post'><table><tr><td><table><tr><td>Message:</td><td align='right'> <input type='text' name='messageText' size='100' maxlength='60' /></td></tr></table></td></tr><tr><td align='center'><input type='submit' name='sendMessage' value='Send' /></td></tr></table></form>");
+	      	
+	}
 }
 %>
 </body>

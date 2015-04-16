@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import model.Catalog;
 import model.Messages;
 import model.User;
+import dao.CatalogDAO;
 import dao.MessageDAO;
 
 /**
@@ -50,6 +53,28 @@ public class NavServlet extends HttpServlet {
 		//If Catalog button clicked
 		if(request.getParameter("catalog") != null)
 		{
+			HttpSession session = request.getSession();
+			String msg = "";
+			
+			//Load products in Catalog
+			Catalog catalog = new Catalog();
+			CatalogDAO catalogData = new CatalogDAO();
+			try {
+				catalog = catalogData.getCatalog();
+				catalogData.connection.DB_Close();
+			} catch (SQLException e) {
+				
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			session.setAttribute("catalog", catalog);
+			session.setAttribute("departmentFilter", "");
+			session.setAttribute("catalogTextFilter", "");
+			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);
 		}
@@ -122,6 +147,17 @@ public class NavServlet extends HttpServlet {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/wishList.jsp");
 			dispatcher.forward(request,  response);
 		}
+		
+		//If Wish List button clicked
+		if(request.getParameter("messageAdmin") != null)
+		{
+			HttpSession session = request.getSession();
+			session.setAttribute("receiverId", "1");
+			session.setAttribute("receiverName", "Admin");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
+			dispatcher.forward(request,  response);
+		}
+
 	}
 
 }
