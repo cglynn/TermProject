@@ -103,7 +103,7 @@ private void addSellersToProduct(Product product) throws SQLException
 	product.sellers = new Vector<ProductSeller>();
 	
 	//create query
-	String sql = "SELECT productSellerId, sellerId, price, shippingCost, productId FROM productSeller WHERE productID = ? ";
+	String sql = "SELECT productSellerId, sellerId, price, shippingCost, productId, companyName FROM productSeller p JOIN user u on p.sellerId = u.userId WHERE productID = ? ";
 	
 	//create connection
 	connection = new ConnectionInfo();
@@ -119,7 +119,7 @@ private void addSellersToProduct(Product product) throws SQLException
 	try {
 		while(connection.result.next()) 
 		{
-			ProductSeller seller = new ProductSeller(connection.result.getInt(1),connection.result.getInt(2),connection.result.getDouble(3), connection.result.getDouble(4), connection.result.getInt(5) );
+			ProductSeller seller = new ProductSeller(connection.result.getInt(1),connection.result.getInt(2),connection.result.getDouble(3), connection.result.getDouble(4), connection.result.getInt(5), connection.result.getString(6) );
 			product.sellers.add(seller);
 		}
 	}

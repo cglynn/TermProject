@@ -8,7 +8,6 @@
 </head>
 <body>
 <%@ include file="nav.jsp" %>
-<%@ include file="logout.jsp" %>
 <%@ page import="model.User" %>
 <%@ page import="model.Catalog" %>
 <%@ page import="model.Product" %>

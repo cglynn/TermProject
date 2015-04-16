@@ -79,4 +79,14 @@
     <servlet-name>EditProductServlet</servlet-name>
     <url-pattern>/EditProductServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NavServlet</display-name>
+    <servlet-name>NavServlet</servlet-name>
+    <servlet-class>controller.NavServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NavServlet</servlet-name>
+    <url-pattern>/NavServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -8,7 +8,6 @@
 </head>
 <body>
 <%@ include file="nav.jsp" %>
-<%@ include file="logout.jsp" %>
 <%@ page import="model.User" %>
 <%@ page import="model.Catalog" %>
 <%@ page import="model.Product" %>
@@ -53,7 +52,7 @@ else{
 	String filterDepartment = (String)session.getAttribute("departmentFilter");
 	String catalogFilter = (String)session.getAttribute("catalogTextFilter");
 	
-	out.print("<form class='boxSignup' name='FilterForm' action='CatalogServlet' method='post'>Filter Text: <input type='text' id='filterText' name='filterText' size='20' value='"+ catalogFilter + "' /><select id='departmentDropDown' name='departmentDropDown'><option value=''>Select Department</option>");
+	out.print("<center><form class='boxSignup' name='FilterForm' action='CatalogServlet' method='post'>Filter Text: <input type='text' id='filterText' name='filterText' size='20' value='"+ catalogFilter + "' /><select id='departmentDropDown' name='departmentDropDown'><option value=''>Select Department</option></center>");
 	
 	Vector<String> departments = catalog.getDepartments();
 	ListIterator<String> departmentsIterator = departments.listIterator();
@@ -129,7 +128,7 @@ else{
 			while(sellers.hasNext())
 			{
 				ProductSeller seller = sellers.next();
-				out.print("<p>Seller Id: " + seller.getSellerId() +"</p>");
+				out.print("<p>Seller Id: " + seller.getSellerCustomerName() +"</p>");
 				out.print("<p>Price: " + seller.getPrice() +"</p>");
 				out.print("<p>Shipping: " + seller.getShippingCost() +"</p>");
 				if(user.getUserType() == userType.buyer.value)
