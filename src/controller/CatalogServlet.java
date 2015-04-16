@@ -45,6 +45,15 @@ public class CatalogServlet extends HttpServlet {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
 			dispatcher.forward(request,  response);
 		}
+		
+		//Check to see if Rate Product was clicked.
+		if(request.getParameter("rateProduct") != null){
+			String productId = request.getParameter("productId");
+			HttpSession session = request.getSession();
+			session.setAttribute("productId", productId);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/review.jsp");
+			dispatcher.forward(request,  response);
+		}
 	}
 
 }

@@ -270,7 +270,33 @@ public int doesProductSellerExist(int productId, int sellerId) throws ClassNotFo
   public void removeProduct() {
   }
 
-  public void reviewProduct() {
+  public void reviewProduct(int productId, int ranking, String review) throws SQLException {
+		//create connection
+		connection = new ConnectionInfo();
+
+		
+
+			//create query
+			String sql = "Insert Into reviewsRanking (productId, ranking, review) Values (?,?,?) ";
+			
+			//create connection
+			connection = new ConnectionInfo();
+			//getConnection();
+			
+			//create prepared statement
+			connection.ps = connection.conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+			
+			//set variable in prepared statement
+			connection.ps.setInt(1, productId);
+			connection.ps.setInt(2, ranking);
+			connection.ps.setString(3, review);
+			
+	        int affectedRows = connection.ps.executeUpdate();
+
+	        if (affectedRows == 0) {
+	            throw new SQLException("Creating product review failed, no rows affected.");
+	        }
+	  
   }
 
   public void addProductShoppingCart() {

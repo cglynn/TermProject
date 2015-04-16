@@ -123,6 +123,13 @@ else{
 					out.print(
 				    		  "<form name='editProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Edit Product' name='editProduct' /></form>");
 			}
+			//user is buyer and print rating button.
+			else
+			{
+				out.print(
+			    		  "<form name='rateProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Rate Product' name='rateProduct' /></form>");
+		
+			}
 			//Display sellers
 			ListIterator<ProductSeller> sellers = product.getSellers();
 			while(sellers.hasNext())

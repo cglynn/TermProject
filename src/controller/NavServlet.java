@@ -148,7 +148,7 @@ public class NavServlet extends HttpServlet {
 			dispatcher.forward(request,  response);
 		}
 		
-		//If Wish List button clicked
+		//If Message Admin button clicked
 		if(request.getParameter("messageAdmin") != null)
 		{
 			HttpSession session = request.getSession();
