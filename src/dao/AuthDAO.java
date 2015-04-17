@@ -76,7 +76,7 @@ public class AuthDAO {
 		//create connection
 		connection = new ConnectionInfo();
 		//getConnection();
-		
+
 		//create prepared statement
 		connection.ps = connection.conn.prepareStatement(sql);
 		
@@ -197,7 +197,13 @@ public class AuthDAO {
 		  public void denySeller() {
 		  }
 
-		  public void closeAccount() {
+		  public void closeAccount(int uid) throws SQLException {
+			  //geethika
+			  String sql="update user set isDeleted=1 where userId= ? ";
+			  connection= new ConnectionInfo();
+			  connection.ps = connection.conn.prepareStatement(sql);
+			  connection.ps.setInt(1,uid);
+			  connection.ps.executeUpdate();
 		  }
 
 }

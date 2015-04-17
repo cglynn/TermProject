@@ -137,7 +137,7 @@ public class NavServlet extends HttpServlet {
 		//If Sign Up button clicked
 		if(request.getParameter("signUp") != null)
 		{
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/signUp.jsp");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/signup.jsp");
 			dispatcher.forward(request,  response);
 		}
 		

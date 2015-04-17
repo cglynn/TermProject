@@ -109,4 +109,14 @@
     <servlet-name>ReviewServlet</servlet-name>
     <url-pattern>/ReviewServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AccountServlet</display-name>
+    <servlet-name>AccountServlet</servlet-name>
+    <servlet-class>controller.AccountServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AccountServlet</servlet-name>
+    <url-pattern>/AccountServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

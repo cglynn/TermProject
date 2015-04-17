@@ -39,6 +39,9 @@ if (!loggedIn)
 		}
 else{
 	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "</p>");
+	out.print(
+  		  "<form name='RemoveUser' action='AccountServlet' method='post'><input type='submit' name='removeUser' value='Delete Account' /></form>");
+    	
 }
 %>
 </body>
