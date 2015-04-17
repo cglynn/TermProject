@@ -12,16 +12,16 @@ public class Address {
 
   public String state;
 
-  public int zip;
+  public String zip;
 
   public Address() {
 		city = "";
 		state = "";
 		street = "";
-		zip = -1;
+		zip = "";
   }
   
-  public Address(String city, String state, String street, int zip){
+  public Address(String city, String state, String street, String zip){
 	  this.city = city;
 	  this.state = state;
 	  this.street = street;
@@ -37,7 +37,7 @@ public class Address {
 	  return state;
   }
 
-  public int getZip() {
+  public String getZip() {
 	  return zip;
   }
 

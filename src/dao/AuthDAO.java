@@ -88,7 +88,7 @@ public class AuthDAO {
 		try {
 			if(connection.result.next()) 
 			{
-				address = new Address(connection.result.getString(13),connection.result.getString(14),connection.result.getString(15),connection.result.getInt(16));
+				address = new Address(connection.result.getString(13),connection.result.getString(14),connection.result.getString(15),connection.result.getString(16));
 			    user = new User(connection.result.getInt(1), connection.result.getString(2), connection.result.getString(3), connection.result.getString(4), connection.result.getInt(5), false, connection.result.getString(6), connection.result.getString(7), connection.result.getInt(8), connection.result.getInt(9), connection.result.getString(10), connection.result.getString(11), connection.result.getInt(12), address);
 			}
 			else
