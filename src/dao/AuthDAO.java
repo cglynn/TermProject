@@ -205,5 +205,31 @@ public class AuthDAO {
 			  connection.ps.setInt(1,uid);
 			  connection.ps.executeUpdate();
 		  }
+		  
+		  public int AccountUpdate(String fn,String ln,String pn,String e,String st, String c, String sta, String zip, String password, int userId) throws SQLException{
+			//create query
+				String sql = "Update user set firstName=? , lastName=?, phoneNumber=?, email=?, street=?, city=?, state=?, zip=?, password=? where userId=? ";
+				
+				//create connection
+				connection = new ConnectionInfo();
+				//getConnection();
+				
+				//create prepared statement
+				connection.ps = connection.conn.prepareStatement(sql);
+				
+				//set variable in prepared statement
+				connection.ps.setString(1,fn);
+				connection.ps.setString(2,ln);
+				connection.ps.setString(3,pn);
+				connection.ps.setString(4,e);
+				connection.ps.setString(5,st);
+				connection.ps.setString(6,c);
+				connection.ps.setString(7,sta);
+				connection.ps.setString(8,zip);
+				connection.ps.setString(9,password);
+				connection.ps.setInt(10,userId);
+			
+				return connection.ps.executeUpdate();					
+		  }
 
 }

@@ -40,5 +40,9 @@ public class Address {
   public String getZip() {
 	  return zip;
   }
+  
+  public String getStreet() {
+	  return street;
+  }
 
 }
