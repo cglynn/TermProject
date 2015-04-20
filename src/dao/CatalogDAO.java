@@ -319,6 +319,30 @@ public int doesProductSellerExist(int productId, int sellerId) throws ClassNotFo
 
   public void removeProductFromOrder() {
   }
+  
+  public void deleteProduct(int productId) throws SQLException {
+		//create connection
+		connection = new ConnectionInfo();
+
+			//create query
+			String sql = "UPDATE product set isDeleted = 1 where productId = ? ";
+			
+			//create connection
+			connection = new ConnectionInfo();
+			//getConnection();
+			
+			//create prepared statement
+			connection.ps = connection.conn.prepareStatement(sql);
+			
+			//set variable in prepared statement
+			connection.ps.setInt(1, productId);
+			
+	        int affectedRows = connection.ps.executeUpdate();
+
+	        if (affectedRows == 0) {
+	            throw new SQLException("Deleting Product failed.");
+	        }
+  }
 
 
 }

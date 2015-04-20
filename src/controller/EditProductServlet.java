@@ -215,6 +215,45 @@ public class EditProductServlet extends HttpServlet {
 			}
 
 		}
+		//If delete product is clicked.
+		if(request.getParameter("deleteProduct") != null){
+			HttpSession session = request.getSession();
+			
+			//Update Data Base
+			CatalogDAO catalogData = new CatalogDAO();
+			try {
+				catalogData.deleteProduct(Integer.parseInt((String) session.getAttribute("productId")));
+			} catch (NumberFormatException | SQLException e) {
+				msg = "Number Format Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			//Delete product in Session, reload catalog to session.  In future may just update product in Session.
+			Catalog catalog = null;
+			catalogData = new CatalogDAO();
+			try {
+				catalog = catalogData.getCatalog();
+				
+			} catch (SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			try {
+				catalogData.connection.DB_Close();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			session.setAttribute("catalog", catalog);
+			
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
+			dispatcher.forward(request,  response);
+		}
 	}
 
 }

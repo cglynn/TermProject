@@ -98,7 +98,7 @@ else{
 					i++;
 				}
 				//Finish Drop Down filter
-				out.print("</td></tr><tr><td><input type='submit' name='saveProduct' value='Save Product' /></td></tr></table></form>");
+				out.print("</td></tr><tr><td><input type='submit' name='saveProduct' value='Save Product' /></td><td><input type='submit' name='deleteProduct' value='Delete Product' /></td></tr></table></form>");
 				
 				//If Seller.  Display option to update Seller Fields.
 				if(user.getUserType() == userType.seller.value)
