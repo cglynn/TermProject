@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.AuthDAO;
+import enums.ListType;
 
 /**
  * Servlet implementation class SignupServlet
@@ -223,10 +224,32 @@ public class SignupServlet extends HttpServlet {
 						//If user account entered
 						if(userId > 0)
 						{
-								msg = "Account Created Successfully";
-								request.setAttribute("msg", msg);
-								RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
-								dispatcher.forward(request,  response);
+							int wishListId = -1;
+							wishListId = data.createList(userId, ListType.wish.value, null);
+							if(wishListId > 0)
+							{
+								int shoppingListId = -1;
+								shoppingListId = data.createList(userId, ListType.shoppingCart.value, null);
+								if(shoppingListId != -1)
+								{
+									msg = "Account Created Successfully";
+									request.setAttribute("msg", msg);
+									try {
+										data.connection.DB_Close();
+									} catch (Throwable e) {
+										e.printStackTrace();
+									}
+									RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
+									dispatcher.forward(request,  response);
+								}
+								else
+								{
+									msg = "Shopping List creation failed.  User account created.";
+								}
+							}
+							else{
+								msg = "Wish List creation failed.  User account created.";
+							}
 						}
 						else{
 							msg = "Account creation Failed";

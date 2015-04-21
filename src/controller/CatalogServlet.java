@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import dao.CatalogDAO;
+import model.List;
+import model.User;
 
 /**
  * Servlet implementation class CatalogServlet
@@ -52,6 +57,41 @@ public class CatalogServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("productId", productId);
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/review.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
+		//Check to see if Add to shopping Cart was clicked.
+		if(request.getParameter("addToShoppingCart") != null){
+			String msg = "";
+			String productSellerId = request.getParameter("productSellerId");
+			HttpSession session = request.getSession();
+			List shoppingCart = (List)session.getAttribute("shoppingCart");
+			User user = (User)session.getAttribute("user");
+			CatalogDAO catalogData = new CatalogDAO();
+		
+				try {
+					catalogData.addProductShoppingCart(shoppingCart.getListId(), Integer.parseInt(productSellerId));
+				} catch (NumberFormatException | SQLException e1) {
+					msg = msg + " Sql Exception " + e1.toString();
+					e1.printStackTrace();
+				}
+				
+				//Update in memory shopping cart
+				try {
+					shoppingCart = catalogData.getShoppingCart(user.getUserId());
+				} catch (SQLException e1) {
+					msg = msg + " Sql Exception " + e1.toString();
+					e1.printStackTrace();
+				}
+				session.setAttribute("shoppingCart", shoppingCart);
+
+			try {
+				catalogData.connection.DB_Close();
+			} catch (Throwable e) {
+				
+				e.printStackTrace();
+			}
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);
 		}
 	}

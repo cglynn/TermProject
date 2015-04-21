@@ -1,6 +1,8 @@
 package model;
 
 import java.util.Vector;
+import java.util.ListIterator;
+import model.ListItem;
 
 public class List {
 
@@ -18,19 +20,40 @@ public class List {
    */
   public Vector<ListItem>  listItem;
 
-  public void list() {
+  public List() {
+	  this.listType = -1;
+	  this.ownerId = -1;
+	  this.listId = -1;
+	  this.orderId = -1;
+	  this.listItem = new Vector<ListItem>();
+  }
+  
+  public List(int listId, int listType, int ownerId, int orderId) {
+	  this.listType = listType;
+	  this.ownerId = ownerId;
+	  this.listId = listId;
+	  this.orderId = orderId;
+	  this.listItem = new Vector<ListItem>();
   }
 
-  public void getListType() {
+  public int getListType() {
+	  return listType;
   }
 
-  public void getOwnerId() {
+  public int getOwnerId() {
+	  return ownerId;
   }
 
-  public void getListId() {
+  public int getListId() {
+	  return listId;
   }
 
-  public void getOrderId() {
+  public int getOrderId() {
+	  return orderId;
+  }
+  
+  public ListIterator<ListItem> getListItems(){
+  	return listItem.listIterator();
   }
 
 }

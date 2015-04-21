@@ -231,5 +231,50 @@ public class AuthDAO {
 			
 				return connection.ps.executeUpdate();					
 		  }
+		  
+		//Adds list for user.  If not successful returns -1 else listId.
+			public int createList(int userId, int listType, Integer orderId) throws SQLException  {
+
+				int listId = -1;
+				
+				//create query
+				String sql = "Insert Into list (ownerId, listType, orderId) Values (?,?, ?) ";
+				
+				//create connection
+				connection = new ConnectionInfo();
+				//getConnection();
+				
+				//create prepared statement
+				connection.ps = connection.conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+				
+				//set variable in prepared statement
+				connection.ps.setInt(1, userId);
+				connection.ps.setInt(2, listType);
+				if(orderId != null)
+				{
+					connection.ps.setInt(3, orderId);
+				}
+				else{
+					connection.ps.setNull(3, java.sql.Types.INTEGER);
+				}
+				
+		        int affectedRows = connection.ps.executeUpdate();
+
+		        if (affectedRows == 0) {
+		            throw new SQLException("Creating list failed, no rows affected.");
+		        }
+
+		        try (ResultSet generatedKeys = connection.ps.getGeneratedKeys()) {
+		            if (generatedKeys.next()) {
+		                listId = generatedKeys.getInt(1);
+		            }
+		            else {
+		                throw new SQLException("Creating list failed, no ID obtained.");
+		            }
+		        }
+
+				return listId;
+					
+				}
 
 }

@@ -141,7 +141,7 @@ else{
 				if(user.getUserType() == userType.buyer.value)
 				{
 					out.print(
-				    		  "<form name='addToShoppingCart' " + seller.getSellerId() + " action='shoppingCart' method='post'><input type='submit' value='Add to Shopping Cart' /></form>");
+				    		  "<form name='addToShoppingCart' " + seller.getSellerId() + " action='CatalogServlet' method='post'><input type ='hidden' name='productSellerId' value='" + seller.getProductSellerId() + "'><input type='submit' name='addToShoppingCart' value='Add to Shopping Cart' /></form>");
 					out.print(
 				    		  "<form name='addToWishList' " + seller.getSellerId() + " action='wishList' method='post'><input type='submit' value='Add to Wish List' /></form>");
 				      	

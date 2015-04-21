@@ -5,7 +5,9 @@ public class ListItem {
 
   public Integer quantity;
 
-  public Integer price;
+  public double price;
+  
+  public double shippingPrice;
 
   public Integer sellerId;
 
@@ -16,25 +18,50 @@ public class ListItem {
   public Integer listItemId;
 
 
-  public void getQuantity() {
+  public int getQuantity() {
+	  return quantity;
   }
 
-  public void getPrice() {
+  public double getPrice() {
+	  return price;
+  }
+  
+  public double getShippingPrice() {
+	  return shippingPrice;
   }
 
-  public void getSellerId() {
+  public int getSellerId() {
+	  return sellerId;
   }
 
-  public void getProductId() {
+  public int getProductId() {
+	  return productId;
   }
 
-  public void productListItem() {
+  public  ListItem() {
+	  this.quantity = -1;
+	  this.price = -1;
+	  this.sellerId = -1;
+	  this.productId = -1;
+	  this.listId = -1;
+	  this.listItemId = -1;
+  }
+  
+  public  ListItem(int listItemId, int listId, int productId, double price, int quantity) {
+	  this.quantity = -1;
+	  this.price = -1;
+	  this.sellerId = -1;
+	  this.productId = -1;
+	  this.listId = -1;
+	  this.listItemId = -1;
   }
 
-  public void getListId() {
+  public int getListId() {
+	  return listId;
   }
 
-  public void getListItemId() {
+  public int getListItemId() {
+	  return listItemId;
   }
 
 }

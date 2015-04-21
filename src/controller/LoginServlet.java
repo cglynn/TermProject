@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.List;
 import model.User;
 import model.Catalog;
 import dao.AuthDAO;
 import dao.CatalogDAO;
+import enums.userType;
 
 /**
  * Servlet implementation class LoginServlet
@@ -95,8 +97,12 @@ public class LoginServlet extends HttpServlet {
 				//Load products in Catalog
 				Catalog catalog = new Catalog();
 				CatalogDAO catalogData = new CatalogDAO();
+				List wishList = new List();
+				List shoppingCart = new List();				
 				try {
 					catalog = catalogData.getCatalog();
+					shoppingCart = catalogData.getShoppingCart(userId);
+					wishList = catalogData.getWishList(userId);					
 					catalogData.connection.DB_Close();
 					data.connection.DB_Close();
 				} catch (SQLException e) {
@@ -111,6 +117,13 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("catalog", catalog);
 				session.setAttribute("departmentFilter", "");
 				session.setAttribute("catalogTextFilter", "");
+				
+				//Load WishList and Shopping List if buyer
+				if(user.getUserType() == userType.buyer.value)
+				{
+					session.setAttribute("shoppingCart", shoppingCart);
+					session.setAttribute("wishList", wishList);
+				}
 				
 				//If issues with form display message
 				if(!msg.equals("")){
