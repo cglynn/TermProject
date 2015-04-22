@@ -332,13 +332,13 @@ public int doesProductSellerExist(int productId, int sellerId) throws ClassNotFo
   }
 
 //Add Item to object list  
-public void addItemToList(List list, ListItem item) throws SQLException
+public void addItemToList(List list) throws SQLException
 {
 	//load items
 	list.listItem = new Vector<ListItem>();
 	
 	//create query
-	String sql = "SELECT listItemId, listId, productId, price quantity FROM listItem WHERE listId = ?";
+	String sql = "SELECT listItemId, listId, productId, price, quantity, sellerId FROM listItem WHERE listId = ?";
 	
 	//create connection
 	connection = new ConnectionInfo();
@@ -354,7 +354,7 @@ public void addItemToList(List list, ListItem item) throws SQLException
 	try {
 		while(connection.result.next()) 
 		{
-			ListItem itemx = new ListItem(connection.result.getInt(1),connection.result.getInt(2),connection.result.getInt(3), connection.result.getDouble(4),connection.result.getInt(5));
+			ListItem itemx = new ListItem(connection.result.getInt(1),connection.result.getInt(2),connection.result.getInt(3), connection.result.getDouble(4),connection.result.getInt(5),connection.result.getInt(6));
 			list.listItem.add(itemx);
 		}
 	}
@@ -470,14 +470,7 @@ public void addItemToList(List list, ListItem item) throws SQLException
 				wishList = new List(connection.result.getInt(1), ListType.wish.value,userId, -1);
 				
 				//Load items of List
-				ListIterator<ListItem> listIterator = wishList.getListItems();
-				if(listIterator != null){
-					while(listIterator.hasNext())
-					{
-						ListItem item = listIterator.next();
-						addItemToList(wishList, item);
-					}
-				}
+				addItemToList(wishList);
 			}
 		}
 		catch (SQLException ex) {
@@ -506,28 +499,17 @@ public void addItemToList(List list, ListItem item) throws SQLException
 		
 		connection.executeQuery();
 
-		try {
-			if(connection.result.next()) 
+		try{
+			if(connection.result.next())
 			{
 				shoppingList = new List(connection.result.getInt(1), ListType.shoppingCart.value,userId, -1);
-				
-				//Load items of List
-				ListIterator<ListItem> listIterator = shoppingList.getListItems();
-				if(listIterator != null)
-				{
-					while(listIterator.hasNext())
-					{
-						ListItem item = listIterator.next();
-						addItemToList(shoppingList, item);
-					}
-				}
+				addItemToList(shoppingList);
 			}
 		}
 		catch (SQLException ex) {
 			Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
 			}
-	  
-	  
+
 	  return shoppingList;
   }
   

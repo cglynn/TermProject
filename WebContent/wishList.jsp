@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Index Page</title>
+<title>Wish List</title>
 </head>
 <body>
+<%@ include file="nav.jsp" %>
 <%@ page import="model.User" %>
 <% 
 

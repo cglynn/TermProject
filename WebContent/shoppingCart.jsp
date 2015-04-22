@@ -4,14 +4,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Index Page</title>
+<title>Shopping Cart</title>
 </head>
 <body>
 <%@ include file="nav.jsp" %>
 <%@ page import="model.User" %>
+<%@ page import="model.List" %>
+<%@ page import="model.Product" %>
+<%@ page import="model.ProductSeller" %>
+<%@ page import="model.ListItem" %>
+<%@ page import="model.Catalog" %>
+<%@ page import= "java.util.Vector" %>
+<%@ page import = "java.util.ListIterator" %>
 <% 
 
 User user = (User)session.getAttribute("user");
+List shoppingCart = (List)session.getAttribute("shoppingCart");
+Catalog catalog = (Catalog)session.getAttribute("catalog");
 boolean loggedIn = false;
 if(user != null)
 {
@@ -39,6 +48,38 @@ if (!loggedIn)
 		}
 else{
 	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "</p>");
+	
+	//If not buyer, do not attempt to display shopping cart.
+	if(user.userType != userType.buyer.value)
+	{
+		out.print("<p>You have come to this page in error. </p>");
+	}
+	//User Type is buyer.  Display shopping Cart.
+	else
+	{
+		//start table.
+		out.print("<table border='line'><tr><td>Quantity</td><td>Name</td><td>Description</td><td>Price</td><td>Shipping</td><td>Remove</td></tr>");
+		
+		//Print Items in Shopping Cart.  Along with remove button.
+		ListIterator<ListItem> items = shoppingCart.getListItems();
+		ListItem item = new ListItem();
+		ProductSeller seller = new ProductSeller();
+		Product product = new Product();
+		
+		while(items.hasNext())
+		{
+			item = items.next();
+			product = catalog.getProductById(item.getProductId());
+			seller = product.getProductSellerById(item.getSellerId());
+			
+			//Print item information.
+			out.print("<tr><td>" + item.getQuantity() + "</td><td>" + product.getName() + "</td><td>" + product.getDescription() + "</td><td>" + seller.getPrice() + "</td><td>" + seller.getShippingCost() + "</td><td><form name='ShoppingCartForm' action='shoppingCartServlet' method='post'><input type ='hidden' name='listItemId' value='" + item.getListItemId() + "'><input type='submit' name='removeFromShoppingcart' value='Remove From Shopping Cart' /></form></td></tr>");
+			
+		}
+		
+		//End Table
+		out.print("</table>");
+	}
 }
 %>
 </body>

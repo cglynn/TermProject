@@ -47,13 +47,13 @@ public class ListItem {
 	  this.listItemId = -1;
   }
   
-  public  ListItem(int listItemId, int listId, int productId, double price, int quantity) {
-	  this.quantity = -1;
-	  this.price = -1;
-	  this.sellerId = -1;
-	  this.productId = -1;
-	  this.listId = -1;
-	  this.listItemId = -1;
+  public  ListItem(int listItemId, int listId, int productId, double price, int quantity, int sellerId) {
+	  this.quantity = quantity;
+	  this.price = price;
+	  this.sellerId = sellerId;
+	  this.productId = productId;
+	  this.listId = listId;
+	  this.listItemId = listItemId;
   }
 
   public int getListId() {
