@@ -306,14 +306,14 @@ public int doesProductSellerExist(int productId, int sellerId) throws ClassNotFo
 	  int listItemId = -1;
 	  
 		//create query
-		String sql = "SELECT listItemId FROM listitem l join productSeller p on l.sellerId = p.sellerId and l.productId = p.productId WHERE listId = ? AND l.sellerId = ? AND l.productId = ? ";
+		String sql = "SELECT listItemId FROM listitem l join productSeller p on l.sellerId = p.productSellerId and l.productId = p.productId WHERE listId = ? AND l.sellerId = ? AND l.productId = ? ";
 		
 		//create prepared statement
 		connection.ps = connection.conn.prepareStatement(sql);
 		
 		//set variable in prepared statement
 		connection.ps.setInt(1, listId);
-		connection.ps.setInt(2, productSeller.getSellerId());
+		connection.ps.setInt(2, productSeller.getProductSellerId());
 		connection.ps.setInt(3, productSeller.getProductId());
 		
 		connection.executeQuery();
@@ -519,7 +519,21 @@ public void addItemToList(List list) throws SQLException
   public void createOrder() {
   }
 
-  public void removeProductShoppingCart() {
+  public void removeProductShoppingCart(int listItemId) throws SQLException {
+		//create connection
+		connection = new ConnectionInfo();
+	  
+		//create query
+		String sql = "DELETE FROM listItem WHERE listItemId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, listItemId);
+		
+		connection.ps.executeUpdate();
+
   }
 
   public void removeItemWishList() {

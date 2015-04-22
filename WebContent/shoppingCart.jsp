@@ -73,7 +73,7 @@ else{
 			seller = product.getProductSellerById(item.getSellerId());
 			
 			//Print item information.
-			out.print("<tr><td>" + item.getQuantity() + "</td><td>" + product.getName() + "</td><td>" + product.getDescription() + "</td><td>" + seller.getPrice() + "</td><td>" + seller.getShippingCost() + "</td><td><form name='ShoppingCartForm' action='shoppingCartServlet' method='post'><input type ='hidden' name='listItemId' value='" + item.getListItemId() + "'><input type='submit' name='removeFromShoppingcart' value='Remove From Shopping Cart' /></form></td></tr>");
+			out.print("<tr><td>" + item.getQuantity() + "</td><td>" + product.getName() + "</td><td>" + product.getDescription() + "</td><td>" + seller.getPrice() + "</td><td>" + seller.getShippingCost() + "</td><td><form name='ShoppingCartForm' action='ShoppingCartServlet' method='post'><input type ='hidden' name='listItemId' value='" + item.getListItemId() + "'><input type='submit' name='removeFromShoppingcart' value='Remove' /></form></td></tr>");
 			
 		}
 		

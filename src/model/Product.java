@@ -91,7 +91,7 @@ public class Product {
 	  while(sellersIterator.hasNext())
 	  {
 		  temp = sellersIterator.next();
-		  if(temp.sellerId == sellerId)
+		  if(temp.getProductSellerId() == sellerId)
 		  {
 			  seller = temp;
 			  break;
