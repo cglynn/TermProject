@@ -2,11 +2,13 @@ package model;
 
 import java.util.ListIterator;
 import java.util.Vector;
+import java.text.*;
 import enums.Department;
 
 public class Catalog {
 
     public Vector<Product>  products;
+    public double taxRate = 0.08;
 
 
   public void catalog() {
@@ -16,6 +18,11 @@ public class Catalog {
   public ListIterator<Product> getProducts()
   {
 	  return products.listIterator();
+  }
+  
+  public double getTaxRate()
+  {
+	  return taxRate;
   }
   
   
@@ -66,6 +73,15 @@ public class Catalog {
 	  departmentValue = departmentValues[departmentId].name();
 		
 	  return departmentValue;
+  }
+  
+  //Returns department name based on value.
+  public String getDecimalString(double price)
+  {
+	  NumberFormat formatter = new DecimalFormat("####.00");
+	  String answer = formatter.format(price);
+	  
+	  return answer;
   }
 
 }

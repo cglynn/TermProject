@@ -1,5 +1,8 @@
 package dao;
+import java.sql.ResultSet;
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -516,7 +519,93 @@ public void addItemToList(List list) throws SQLException
   public void addProductWishList() {
   }
 
-  public void createOrder() {
+  public int createOrder(int ownerId, double tax, double subTotal, String receiverName, String accountNumber, String street, String city, String state, String zip   ) throws SQLException {
+
+		int orderId = -1;
+		
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String currentTime = sdf.format(now);
+		
+		//create query
+		String sql = "Insert Into orders (buyerId, receiverName, tax, totalPrice, time, shippingStatus, payPalAcctNumber, street, city, state, zip) Values (?,?,?,?,?,?,?,?,?,?,?) ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, ownerId);
+		connection.ps.setString(2, receiverName);
+		connection.ps.setDouble(3, tax);
+		connection.ps.setDouble(4, subTotal);
+		connection.ps.setString(5, currentTime);
+		connection.ps.setInt(6, 0);
+		connection.ps.setString(7, accountNumber);
+		connection.ps.setString(8, street);
+		connection.ps.setString(9, city);
+		connection.ps.setString(10, state);
+		connection.ps.setString(11, zip);
+		
+      int affectedRows = connection.ps.executeUpdate();
+
+      if (affectedRows == 0) {
+          throw new SQLException("Creating user failed, no rows affected.");
+      }
+
+      try (ResultSet generatedKeys = connection.ps.getGeneratedKeys()) {
+          if (generatedKeys.next()) {
+              orderId = generatedKeys.getInt(1);
+          }
+          else {
+              throw new SQLException("Creating user failed, no ID obtained.");
+          }
+      }
+
+		return orderId;	  
+  }
+  
+  public void switchShopCartToOrderList(int listId, int orderId   ) throws SQLException {
+
+		//create query
+		String sql = "UPDATE list SET listType = ?, orderId = ? WHERE listId = ? ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, ListType.order.value);
+		connection.ps.setInt(2, orderId);
+		connection.ps.setInt(3, listId);
+
+		
+     connection.ps.executeUpdate();
+  
+  }
+  
+  public void updateListItem(ListItem item) throws SQLException {
+
+		//create query
+		String sql = "UPDATE listItem SET price = ?, shippingPrice = ? WHERE listItemId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setDouble(1, item.getPrice());
+		connection.ps.setDouble(2, item.getShippingPrice());
+		connection.ps.setInt(3, item.getListItemId());
+
+		
+     connection.ps.executeUpdate();
+  
   }
 
   public void removeProductShoppingCart(int listItemId) throws SQLException {
@@ -567,6 +656,34 @@ public void addItemToList(List list) throws SQLException
 	        if (affectedRows == 0) {
 	            throw new SQLException("Deleting Product failed.");
 	        }
+	        
+	     removeProductFromWishShopLists(productId);
+  }
+  
+  public void removeProductFromWishShopLists(int productId) throws SQLException {
+
+			//create query
+			String sql = "DELETE FROM listItem WHERE productId = ? AND listId in (SELECT listId FROM list WHERE listType = ? OR listType = ?) ";
+			
+			//create connection
+			connection = new ConnectionInfo();
+			//getConnection();
+			
+			//create prepared statement
+			connection.ps = connection.conn.prepareStatement(sql);
+			
+			//set variable in prepared statement
+			connection.ps.setInt(1, productId);
+			connection.ps.setInt(2, ListType.shoppingCart.value);
+			connection.ps.setInt(3, ListType.wish.value);
+			
+	        int affectedRows = connection.ps.executeUpdate();
+
+	        if (affectedRows == 0) {
+	            throw new SQLException("Deleting Product from shopping and wish lists failed.");
+	        }
+	        
+	     removeProductFromWishShopLists(productId);
   }
 
 

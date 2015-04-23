@@ -55,5 +55,24 @@ public class List {
   public ListIterator<ListItem> getListItems(){
   	return listItem.listIterator();
   }
+  
+  public double getListItemsTotalCost(Catalog catalog){
+	  
+	  	double total = 0.0;
+	  	ListItem item = new ListItem();
+	  	ListIterator<ListItem> items = listItem.listIterator();
+  		Product product = new Product();
+  		ProductSeller seller = new ProductSeller();
+	  	while(items.hasNext())
+	  	{
+	  		item = items.next();
+	  		product = catalog.getProductById(item.getProductId());
+	  		seller = product.getProductSellerById(item.getSellerId());
+	  		total = total + seller.getPrice() + seller.getShippingCost();
+	  	}
+	  	
+	  	return total;
+	  			
+	  }
 
 }

@@ -85,6 +85,14 @@ public class ShoppingCartServlet extends HttpServlet {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/shoppingCart.jsp");
 			dispatcher.forward(request,  response);
 		}
+		
+		//If remove from shopping cart clicked
+		if(request.getParameter("submitShoppingCart") != null)
+		{
+			//forward to purchase page
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/purchase.jsp");
+			dispatcher.forward(request,  response);
+		}
 	}
 
 }

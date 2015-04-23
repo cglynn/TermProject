@@ -129,4 +129,14 @@
     <servlet-name>ShoppingCartServlet</servlet-name>
     <url-pattern>/ShoppingCartServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>PurchaseServlet</display-name>
+    <servlet-name>PurchaseServlet</servlet-name>
+    <servlet-class>controller.PurchaseServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PurchaseServlet</servlet-name>
+    <url-pattern>/PurchaseServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

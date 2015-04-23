@@ -136,8 +136,8 @@ else{
 			{
 				ProductSeller seller = sellers.next();
 				out.print("<p>Seller Id: " + seller.getSellerCompanyName() +"</p>");
-				out.print("<p>Price: " + seller.getPrice() +"</p>");
-				out.print("<p>Shipping: " + seller.getShippingCost() +"</p>");
+				out.print("<p>Price: " + catalog.getDecimalString( seller.getPrice()) +"</p>");
+				out.print("<p>Shipping: " + catalog.getDecimalString( seller.getShippingCost()) +"</p>");
 				if(user.getUserType() == userType.buyer.value)
 				{
 					out.print(

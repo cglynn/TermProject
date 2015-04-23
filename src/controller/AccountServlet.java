@@ -70,7 +70,6 @@ public class AccountServlet extends HttpServlet {
 		if(request.getParameter("updateAccount") != null)
 		{
 			String msg = "";
-			AuthDAO data = new AuthDAO();
 			
 			//Verify first name
 			String firstName = request.getParameter("firstName");
@@ -189,6 +188,7 @@ public class AccountServlet extends HttpServlet {
 			
 			//If no issues with form, process Sign up.
 			else{
+				AuthDAO data = new AuthDAO();
 				try {
 
 						HttpSession session = request.getSession();
