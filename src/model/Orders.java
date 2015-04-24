@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ListIterator;
 import java.util.Vector;
 
 public class Orders {
@@ -11,6 +12,11 @@ public class Orders {
   public Vector<Order>  orders;
 
   public void orders() {
+  }
+  
+  public ListIterator<Order> getOrders()
+  {
+	  return orders.listIterator();
   }
 
 }

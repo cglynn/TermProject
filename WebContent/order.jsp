@@ -4,11 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Index Page</title>
+<title>Order Page</title>
 </head>
 <body>
 <%@ include file="nav.jsp" %>
 <%@ page import="model.User" %>
+<%@ page import="model.List" %>
+<%@ page import="model.ListItem" %>
+<%@ page import="model.Address" %>
+<%@ page import="model.Order" %>
+<%@ page import="model.Orders" %>
+<%@ page import="model.Catalog" %>
+<%@ page import="enums.userType" %>
+<%@ page import= "java.util.Vector" %>
+<%@ page import = "java.util.ListIterator" %>
 <% 
 
 User user = (User)session.getAttribute("user");
@@ -39,6 +48,34 @@ if (!loggedIn)
 		}
 else{
 	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "</p>");
+	//Display buyers view
+	if(user.getUserType() == userType.buyer.value)
+	{
+		
+		Orders orders = (Orders)session.getAttribute("orders");
+		if(orders.orders != null)
+		{
+			Catalog catalog = (Catalog)session.getAttribute("catalog");
+			Order order = new Order();
+			Address shippingAddress = new Address();
+			
+			ListIterator<Order> orderIterator = orders.getOrders();
+			while(orderIterator.hasNext())
+			{
+				order = orderIterator.next();
+				//Print table headings
+				shippingAddress = order.getShippingAddress();
+				out.print("<table border='line'><tr><td>Receiver</td><td>Tax</td><td>Total</td><td>Time</td><td>Shipped</td><td>Street</td><td>City</td><td>State</td><td>Zip</td></tr>");
+				out.print("<tr><td>" + order.getReceiverName() + "</td><td>" + catalog.getDecimalString(order.getTax()) + "</td><td>" + catalog.getDecimalString(order.getTotalPrice()) + "</td><td>" + order.getTime() + "</td><td>" + order.getShippingStatus() + "</td><td>" + shippingAddress.getStreet() + "</td><td>" + shippingAddress.getCity() + "</td><td>" + shippingAddress.getState() + "</td><td>" + shippingAddress.getZip() + "</td></tr>");
+				out.print("</table>");
+			}
+		}
+		//Else user does not have any orders
+		else{
+			out.print("No orders to display");
+		}
+		
+	}
 }
 %>
 </body>

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import model.Catalog;
 import model.List;
 import model.ListItem;
+import model.Orders;
 import model.Product;
 import model.ProductSeller;
 import model.User;
@@ -153,7 +154,7 @@ public class PurchaseServlet extends HttpServlet {
 									seller = product.getProductSellerById(item.sellerId);
 									item.price = seller.getPrice();
 									item.shippingPrice = seller.getShippingCost();
-									data.updateListItem(item);
+									data.updateListItemPrices(item);
 								}
 								
 								//Switch Shopping list to Order list
@@ -162,11 +163,16 @@ public class PurchaseServlet extends HttpServlet {
 								msg = "Order Created Successfully";
 								request.setAttribute("msg", msg);
 								
+								//Load Orders
+								Orders orders = new Orders();
+								orders = data.getBuyerOrder(user.getUserId() );
+								
 								//Create and load new empty shopping Cart.
 								AuthDAO dataAuth = new AuthDAO();
 								dataAuth.createList(userId, ListType.shoppingCart.value, null);
 								List shoppingCart = data.getShoppingCart(userId);
 								session.setAttribute("shoppingCart", shoppingCart);
+								session.setAttribute("orders", orders);
 								dataAuth.connection.DB_Close();
 								data.connection.DB_Close();
 								

@@ -87,78 +87,82 @@ else{
 	while(products.hasNext())
 	{
 		Product product = products.next();	
-
-		department = catalog.getDepartmentByValue(product.getDepartment());
 		
-		//Filter. department is chosen and product name or description contains text. display product. 
-		if((department.indexOf(filterDepartment) != -1) && ((product.name.indexOf(catalogFilter) != -1)    || (product.description.indexOf(catalogFilter) != -1)))
+		//If product is not deleted.
+		if(product.getIsDeleted() == 0)
 		{
-
-			//Create new Row, reset count.
-			if(count > 4)
+			department = catalog.getDepartmentByValue(product.getDepartment());
+			
+			//Filter. department is chosen and product name or description contains text. display product. 
+			if((department.indexOf(filterDepartment) != -1) && ((product.name.indexOf(catalogFilter) != -1)    || (product.description.indexOf(catalogFilter) != -1)))
 			{
-				out.print("</row><row>");
-				count = 0;
-			}
-			count++;
-			
-			//Start new cell
-			out.print("<td valign='top'>");
-			
-			//Display Products
-			
 	
-			out.print("<p>Product Name: " + product.getName() + "</br> Product Description: " + product.getDescription() + "</br>Product Department: " + department + "</p>");
-			
-			//Display images
-			ListIterator<Image> images = product.getImages();
-			while(images.hasNext())
-			{
-				Image image = images.next();
-				out.print("<img src='Images/"+ image.location + "' height='50' width='50'>");
-			}
-			
-			//Edit product Link for Sellers and Admins
-			if(user.getUserType() != userType.buyer.value){
-					out.print(
-				    		  "<form name='editProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Edit Product' name='editProduct' /></form>");
-			}
-			//user is buyer and print rating button.
-			else
-			{
-				out.print(
-			    		  "<form name='rateProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Rate Product' name='rateProduct' /></form>");
+				//Create new Row, reset count.
+				if(count > 4)
+				{
+					out.print("</row><row>");
+					count = 0;
+				}
+				count++;
+				
+				//Start new cell
+				out.print("<td valign='top'>");
+				
+				//Display Products
+				
 		
-			}
-			//Display sellers
-			ListIterator<ProductSeller> sellers = product.getSellers();
-			while(sellers.hasNext())
-			{
-				ProductSeller seller = sellers.next();
-				out.print("<p>Seller Id: " + seller.getSellerCompanyName() +"</p>");
-				out.print("<p>Price: " + catalog.getDecimalString( seller.getPrice()) +"</p>");
-				out.print("<p>Shipping: " + catalog.getDecimalString( seller.getShippingCost()) +"</p>");
-				if(user.getUserType() == userType.buyer.value)
+				out.print("<p>Product Name: " + product.getName() + "</br> Product Description: " + product.getDescription() + "</br>Product Department: " + department + "</p>");
+				
+				//Display images
+				ListIterator<Image> images = product.getImages();
+				while(images.hasNext())
+				{
+					Image image = images.next();
+					out.print("<img src='Images/"+ image.location + "' height='50' width='50'>");
+				}
+				
+				//Edit product Link for Sellers and Admins
+				if(user.getUserType() != userType.buyer.value){
+						out.print(
+					    		  "<form name='editProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Edit Product' name='editProduct' /></form>");
+				}
+				//user is buyer and print rating button.
+				else
 				{
 					out.print(
-				    		  "<form name='addToShoppingCart' " + seller.getSellerId() + " action='CatalogServlet' method='post'><input type ='hidden' name='productSellerId' value='" + seller.getProductSellerId() + "'><input type='submit' name='addToShoppingCart' value='Add to Shopping Cart' /></form>");
-					out.print(
-				    		  "<form name='addToWishList' " + seller.getSellerId() + " action='wishList' method='post'><input type='submit' value='Add to Wish List' /></form>");
-				      	
+				    		  "<form name='rateProduct' action='CatalogServlet' method='post'><input type='hidden' id='productId' name='productId' value='"+ product.getProductId() + "' /><input type='submit' value='Rate Product' name='rateProduct' /></form>");
+			
 				}
+				//Display sellers
+				ListIterator<ProductSeller> sellers = product.getSellers();
+				while(sellers.hasNext())
+				{
+					ProductSeller seller = sellers.next();
+					out.print("<p>Seller Id: " + seller.getSellerCompanyName() +"</p>");
+					out.print("<p>Price: " + catalog.getDecimalString( seller.getPrice()) +"</p>");
+					out.print("<p>Shipping: " + catalog.getDecimalString( seller.getShippingCost()) +"</p>");
+					if(user.getUserType() == userType.buyer.value)
+					{
+						out.print(
+					    		  "<form name='addToShoppingCart' " + seller.getSellerId() + " action='CatalogServlet' method='post'><input type ='hidden' name='productSellerId' value='" + seller.getProductSellerId() + "'><input type='submit' name='addToShoppingCart' value='Add to Shopping Cart' /></form>");
+						out.print(
+					    		  "<form name='addToWishList' " + seller.getSellerId() + " action='wishList' method='post'><input type='submit' value='Add to Wish List' /></form>");
+					      	
+					}
+				}
+				
+				//Display Reviews and Rankings
+				ListIterator<ReviewsRanking> reviewsRankings = product.getReviewsRanking();
+				while(reviewsRankings.hasNext())
+				{
+					ReviewsRanking reviewsRanking = reviewsRankings.next();
+					out.print("<p>Ranking : " + reviewsRanking.getRanking() +"</p>");
+					out.print("<p>Review : " + reviewsRanking.getReview() +"</p>");	
+				}
+				
+				//End cell
+				out.print("</td>");
 			}
-			
-			//Display Reviews and Rankings
-			ListIterator<ReviewsRanking> reviewsRankings = product.getReviewsRanking();
-			while(reviewsRankings.hasNext())
-			{
-				ReviewsRanking reviewsRanking = reviewsRankings.next();
-				out.print("<p>Ranking : " + reviewsRanking.getRanking() +"</p>");
-				out.print("<p>Review : " + reviewsRanking.getReview() +"</p>");	
-			}
-			
-			//End cell
-			out.print("</td>");
 		}
 		
 	}

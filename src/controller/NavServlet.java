@@ -12,9 +12,11 @@ import javax.servlet.http.HttpSession;
 
 import model.Catalog;
 import model.Messages;
+import model.Orders;
 import model.User;
 import dao.CatalogDAO;
 import dao.MessageDAO;
+import enums.userType;
 
 /**
  * Servlet implementation class NavServlet
@@ -123,6 +125,31 @@ public class NavServlet extends HttpServlet {
 		//If Orders button clicked
 		if(request.getParameter("orders") != null)
 		{
+			//Load Orders
+			HttpSession session = request.getSession();
+			User user = (User)session.getAttribute("user");
+			String msg = "";
+			//Load buyer orders
+			if(user.getUserType() == userType.buyer.value)
+			{
+				CatalogDAO data = new CatalogDAO();
+				Orders orders = new Orders();
+				try {
+					orders = data.getBuyerOrder(user.getUserId() );
+				} catch (SQLException e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}
+				
+				session.setAttribute("orders", orders);
+				try {
+					data.connection.DB_Close();
+				} catch (Throwable e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}
+			}
+			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
 			dispatcher.forward(request,  response);
 		}

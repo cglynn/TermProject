@@ -7,9 +7,9 @@ public class Order {
 
   public String receiverName;
 
-  public Integer tax;
+  public double tax;
 
-  public Integer totalPrice;
+  public double totalPrice;
 
   public String time;
 
@@ -17,37 +17,72 @@ public class Order {
 
   public Integer shippingStatus;
 
-  public Integer payPalAccount;
+  public String payPalAccount;
 
   public Address shippingAddress;
   
   public List productList;
 
-  public void order() {
+  public Order() {
+	  this.buyerId = -1;
+	  this.receiverName = "";
+	  this.tax = 0.0;
+	  this.totalPrice = 0.0;
+	  this.time = "";
+	  this.orderId = -1;
+	  this.shippingStatus = 0;
+	  this.payPalAccount = "";
+	  this.shippingAddress = new Address();
+	  this.productList = new List();
+  }
+  
+  public Order( String receiverName, double tax, double totalPrice, String time, int orderId, int shippingStatus, Address shipping, List productList, int buyerId) {
+	  this.buyerId =buyerId;
+	  this.receiverName = receiverName;
+	  this.tax = tax;
+	  this.totalPrice = totalPrice;
+	  this.time = time;
+	  this.orderId = orderId;
+	  this.shippingStatus = shippingStatus;
+	  this.payPalAccount = "";
+	  this.shippingAddress = shipping;
+	  this.productList = productList;
   }
 
-  public void getBuyerId() {
+  public int getBuyerId() {
+	  return buyerId;
   }
 
-  public void getReceiverUid() {
+  public String getReceiverName() {
+	  return receiverName;
   }
 
-  public void getTax() {
+  public double getTax() {
+	  return tax;
   }
 
-  public void getTotalPrice() {
+  public double getTotalPrice() {
+	  return totalPrice;
   }
 
-  public void getTime() {
+  public String getTime() {
+	  return time;
   }
 
-  public void getOrderId() {
+  public int getOrderId() {
+	  return orderId;
   }
 
-  public void getShippingStatus() {
+  public int getShippingStatus() {
+	  return shippingStatus;
   }
 
-  public void getPayPalAccount() {
+  public String getPayPalAccount() {
+	  return payPalAccount;
+  }
+  
+  public Address getShippingAddress() {
+	  return shippingAddress;
   }
 
 }

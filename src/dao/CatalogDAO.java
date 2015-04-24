@@ -6,8 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import model.Address;
 import model.List;
 import model.ListItem;
+import model.Order;
+import model.Orders;
 import model.Product;
 import model.Catalog;
 import model.ReviewsRanking;
@@ -35,7 +38,7 @@ public class CatalogDAO {
 		
 	  	catalog.products = new Vector<Product>();
 		//create query
-		String sql = "SELECT productID, name, description, department, isDeleted FROM product WHERE isDeleted = 0";
+		String sql = "SELECT productID, name, description, department, isDeleted FROM product";
 		
 		//create prepared statement
 		connection.ps = connection.conn.prepareStatement(sql);
@@ -454,7 +457,7 @@ public void addItemToList(List list) throws SQLException
   public List getWishList(int userId) throws SQLException 
   {
 	  List wishList = null;
-
+	  /*
 		//create query
 		String sql = "SELECT listId FROM list WHERE ownerId = ? AND listType = ? ";
 		
@@ -479,6 +482,8 @@ public void addItemToList(List list) throws SQLException
 		catch (SQLException ex) {
 			Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
 			}
+			*/
+	  wishList = getList(userId, ListType.wish.value);
 	  
 	  
 	  return wishList;
@@ -489,7 +494,7 @@ public void addItemToList(List list) throws SQLException
   public List getShoppingCart(int userId) throws SQLException
   {
 	  List shoppingList = null;
-
+	  /*
 		//create query
 		String sql = "SELECT listId FROM list WHERE ownerId = ? AND listType = ? ";
 		
@@ -512,8 +517,71 @@ public void addItemToList(List list) throws SQLException
 		catch (SQLException ex) {
 			Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
 			}
+			*/
+	  shoppingList = getList(userId, ListType.shoppingCart.value);
 
 	  return shoppingList;
+  }
+  
+  //returns list, else null.
+  public List getList(int userId, int listType) throws SQLException
+  {
+	  List list = null;
+
+		//create query
+		String sql = "SELECT listId, orderId FROM list WHERE ownerId = ? AND listType = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, userId);
+		connection.ps.setInt(2, listType);
+		
+		connection.executeQuery();
+
+		try{
+			if(connection.result.next())
+			{
+				list = new List(connection.result.getInt(1), listType ,userId, connection.result.getInt(2) );
+				addItemToList(list);
+			}
+		}
+		catch (SQLException ex) {
+			Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+	  return list;
+  }
+  
+  //returns list, else null.
+  public List getListByListId(int listId) throws SQLException
+  {
+	  List list = null;
+
+		//create query
+		String sql = "SELECT listId, orderId, listType, ownerId FROM list WHERE listId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, listId);
+		
+		connection.executeQuery();
+
+		try{
+			if(connection.result.next())
+			{
+				list = new List(connection.result.getInt(1), connection.result.getInt(3) ,connection.result.getInt(4), connection.result.getInt(2) );
+				addItemToList(list);
+			}
+		}
+		catch (SQLException ex) {
+			Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+	  return list;
   }
   
   public void addProductWishList() {
@@ -568,6 +636,55 @@ public void addItemToList(List list) throws SQLException
 		return orderId;	  
   }
   
+  public Orders getBuyerOrder(int userId) throws SQLException {
+
+		//create query
+		String sql = "Select  city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE ownerId = ? ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, userId);
+
+		
+		connection.executeQuery();
+		
+		Orders orders = new Orders();
+		orders.orders = new Vector<Order>();
+		
+		try {
+			while(connection.result.next()) 
+			{	 
+				String city = connection.result.getString(1);
+				String state = connection.result.getString(2);
+				String street = connection.result.getString(3);
+				String zip = connection.result.getString(4);
+				int listId = connection.result.getInt(5);
+				String receiverName = connection.result.getString(6);
+				double tax = connection.result.getDouble(7);
+				double totalPrice = connection.result.getDouble(8);
+				String time = connection.result.getString(9);
+				int orderId = connection.result.getInt(10);
+				int shippingStatus = connection.result.getInt(11);
+
+				Address shipping = new Address(city, state, street, zip);
+				List list = getListByListId(listId);
+				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, userId);
+				orders.orders.add(order);
+			}
+		}
+		catch (SQLException ex) {
+			Logger.getLogger(CatalogDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+		return orders;	  
+  }
+  
   public void switchShopCartToOrderList(int listId, int orderId   ) throws SQLException {
 
 		//create query
@@ -590,7 +707,7 @@ public void addItemToList(List list) throws SQLException
   
   }
   
-  public void updateListItem(ListItem item) throws SQLException {
+  public void updateListItemPrices(ListItem item) throws SQLException {
 
 		//create query
 		String sql = "UPDATE listItem SET price = ?, shippingPrice = ? WHERE listItemId = ? ";
