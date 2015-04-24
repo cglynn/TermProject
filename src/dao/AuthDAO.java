@@ -206,9 +206,9 @@ public class AuthDAO {
 			  connection.ps.executeUpdate();
 		  }
 		  
-		  public int AccountUpdate(String fn,String ln,String pn,String e,String st, String c, String sta, String zip, String password, int userId) throws SQLException{
+		  public int AccountUpdate(String fn,String ln,String pn,String e,String st, String c, String sta, String zip, String password, int userId, int routingNumber, int accountNumber, String url, String companyName) throws SQLException{
 			//create query
-				String sql = "Update user set firstName=? , lastName=?, phoneNumber=?, email=?, street=?, city=?, state=?, zip=?, password=? where userId=? ";
+				String sql = "Update user set firstName=? , lastName=?, phoneNumber=?, email=?, street=?, city=?, state=?, zip=?, password=?, routingNumber=?, accountNumber=?, url=?, companyName =? where userId=? ";
 				
 				//create connection
 				connection = new ConnectionInfo();
@@ -227,7 +227,14 @@ public class AuthDAO {
 				connection.ps.setString(7,sta);
 				connection.ps.setString(8,zip);
 				connection.ps.setString(9,password);
-				connection.ps.setInt(10,userId);
+				
+				connection.ps.setInt(10,routingNumber);
+				connection.ps.setInt(11,accountNumber);
+				connection.ps.setString(12,url);
+				connection.ps.setString(13,companyName);
+				
+				
+				connection.ps.setInt(14,userId);
 			
 				return connection.ps.executeUpdate();					
 		  }

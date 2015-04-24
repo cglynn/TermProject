@@ -106,7 +106,7 @@ public class User {
 	  }
 
 	  public int getAccountNumber() {
-		  return routingNumber;
+		  return accountNumber;
 	  }
 
 	  public String getUrl() {

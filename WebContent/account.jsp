@@ -9,6 +9,7 @@
 <body>
 <%@ include file="nav.jsp" %>
 <%@ page import="model.User" %>
+<%@ page import="enums.userType" %>
 <%@ page import="model.Address" %>
 <% 
 
@@ -41,9 +42,30 @@ if (!loggedIn)
 else{
 	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + " </p>");
 	
-	
-	out.print(
-	  		  "<form name='AccountForm' action='AccountServlet' method='post'><table><tr><td>UserName:</td><td><input type='text' name='username' disabled maxlength='20' size='20'  value= "+ user.getUserName() +" /></td></tr><tr><td>First Name:</td><td><input type='text' name='firstName' maxlength='20' size='20' value= "+ user.getFirstName() +" /></td></tr><tr><td>Last Name:</td><td><input type='text' name='lastName' maxlength='20' size='20' value= "+ user.getLastName() +" /></td></tr><tr><td>Phone Number:</td><td><input type='text' name='phoneNumber' maxlength='20' size='20' value= "+ user.getPhoneNumber() +" /></td></tr><tr><td>Email:</td><td><input type='text' name='email' maxlength='20' size='20' value= "+ user.getEmail() +" /></td></tr><tr><td>Street:</td><td><input type='text' name='street' size='20' maxlength='20' value= "+ user.getMailingAddress().getStreet() +" /></td></tr><tr><td>City:</td><td><input type='text' name='city' size='20' maxlength='20' value= "+ user.getMailingAddress().city +" /></td></tr><tr><td>State:</td><td><input type='text' name='state' maxlength='20' size='20' value= "+ user.getMailingAddress().getState() +" /></td></tr><tr><td>Zip:</td><td><input type='text' name='zip' size='20'  maxlength='20' value= "+ user.getMailingAddress().getZip() +" /></td></tr><tr><td>Password:</td><td><input type='password' name='password' size='20' maxlength='20'/></td></tr><tr><td><input type='submit' name='updateAccount' value='Update' /><input type='submit' name='removeUser' value='Delete Account' /></td></tr></table></form>");
+	//If not Admin
+	if(user.getUserType() != userType.admin.value)
+	{
+		out.print(
+		  		  "<form name='AccountForm' action='AccountServlet' method='post'><table><tr><td>UserName:</td><td><input type='text' name='username' disabled maxlength='20' size='20'  value= "+ user.getUserName() +" /></td></tr><tr><td>First Name:</td><td><input type='text' name='firstName' maxlength='20' size='20' value= "+ user.getFirstName() +" /></td></tr><tr><td>Last Name:</td><td><input type='text' name='lastName' maxlength='20' size='20' value= "+ user.getLastName() +" /></td></tr><tr><td>Phone Number:</td><td><input type='text' name='phoneNumber' maxlength='20' size='20' value= "+ user.getPhoneNumber() +" /></td></tr><tr><td>Email:</td><td><input type='text' name='email' maxlength='20' size='20' value= "+ user.getEmail() +" /></td></tr><tr><td>Street:</td><td><input type='text' name='street' size='20' maxlength='20' value= "+ user.getMailingAddress().getStreet() +" /></td></tr><tr><td>City:</td><td><input type='text' name='city' size='20' maxlength='20' value= "+ user.getMailingAddress().city +" /></td></tr><tr><td>State:</td><td><input type='text' name='state' maxlength='20' size='20' value= "+ user.getMailingAddress().getState() +" /></td></tr><tr><td>Zip:</td><td><input type='text' name='zip' size='20'  maxlength='20' value= "+ user.getMailingAddress().getZip() +" /></td></tr><tr><td>Password:</td><td><input type='password' name='password' size='20' maxlength='20'/></td></tr>");
+		
+		if(user.getUserType() == userType.seller.value)
+		{
+			out.print("<tr><td>Routing Number:</td><td><input type='text' name='routingNumber'  maxlength='20' size='20'  value= "+ user.getRoutingNumber() +" /></td></tr>");
+			out.print("<tr><td>Account Number:</td><td><input type='text' name='accountNumber'  maxlength='20' size='20'  value= "+ user.getAccountNumber() +" /></td></tr>");
+			out.print("<tr><td>URL:</td><td><input type='text' name='url'  maxlength='20' size='20'  value= "+ user.getUrl() +" /></td></tr>");
+			out.print("<tr><td>Company Name:</td><td><input type='text' name='companyName'  maxlength='20' size='20'  value= "+ user.getCompanyName() +" /></td></tr>");
+		}
+
+		out.print("<tr><td><input type='submit' name='updateAccount' value='Update' /><input type='submit' name='removeUser' value='Delete Account' /></td></tr>");
+		
+		if(user.getUserType() == userType.buyer.value)
+		{
+			out.print("<tr><td><input type='submit' name='requestSellerAccount' value='Request Seller Account' /></td></tr>");
+		}
+		
+		out.print("</table></form>");
+		
+	}
 }
 %>
 </body>

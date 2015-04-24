@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import model.User;
 import dao.AuthDAO;
+import enums.userType;
 
 /**
  * Servlet implementation class AccountServlet
@@ -70,6 +71,9 @@ public class AccountServlet extends HttpServlet {
 		if(request.getParameter("updateAccount") != null)
 		{
 			String msg = "";
+			
+			HttpSession session = request.getSession();
+			User user = (User)session.getAttribute("user");
 			
 			//Verify first name
 			String firstName = request.getParameter("firstName");
@@ -178,7 +182,83 @@ public class AccountServlet extends HttpServlet {
 			{
 				msg = msg + " Password can only be 20 characters long.<br>";
 			}
+			
+			int accountNumber = -1;
+			int routingNumber = -1;
+			String url = "";
+			String companyName = "";
+			
+			if(user.getUserType() == userType.seller.value)
+			{
+				//Verify routingNumber
+				String routingNumberString = request.getParameter("routingNumber");
+				if(routingNumberString == null) routingNumberString = "";
+				if (routingNumberString.length() == 0)
+				{
+					msg = msg + " Please enter Routing Number.<br>";
+				}
+				else if(routingNumberString.length() > 20)
+				{
+					msg = msg + " Routing Number can only be 20 characters long.<br>";
+				}
+				else{
+					
+					try {
+						routingNumber = Integer.parseInt(routingNumberString);
+					}
+					catch (NumberFormatException nfe)
+					{
+						msg = msg + " Please enter routing number as all numbers.";
+					}
+				}
 				
+				//Verify accountNumber
+				String accountNumberString = request.getParameter("accountNumber");
+				if(accountNumberString == null) accountNumberString = "";
+				if (accountNumberString.length() == 0)
+				{
+					msg = msg + " Please enter Account Number.<br>";
+				}
+				else if(accountNumberString.length() > 20)
+				{
+					msg = msg + " Account Number can only be 20 characters long.<br>";
+				}
+				else{
+					
+					try {
+						accountNumber = Integer.parseInt(accountNumberString);
+					}
+					catch (NumberFormatException nfe)
+					{
+						msg = msg + " Please enter account number as all numbers.";
+					}
+				}
+				
+				//Verify url
+				url = request.getParameter("url");
+				if(url == null) url = "";
+				if (url.length() == 0)
+				{
+					msg = msg + " Please enter URL.<br>";
+				}
+				else if(url.length() > 20)
+				{
+					msg = msg + " URL can only be 20 characters long.<br>";
+				}
+				
+				//Verify companyName
+				companyName = request.getParameter("companyName");
+				if(companyName == null) companyName = "";
+				if (companyName.length() == 0)
+				{
+					msg = msg + " Please enter Company Name.<br>";
+				}
+				else if(url.length() > 20)
+				{
+					msg = msg + " Company Name can only be 20 characters long.<br>";
+				}
+			}
+			
 			//If issues with form display message
 			if(!msg.equals("")){
 				request.setAttribute("msg", msg);
@@ -190,11 +270,8 @@ public class AccountServlet extends HttpServlet {
 			else{
 				AuthDAO data = new AuthDAO();
 				try {
-
-						HttpSession session = request.getSession();
-						User user = (User)session.getAttribute("user");
 						int userId = user.getUserId();
-						int result=data.AccountUpdate(firstName,lastName,phoneNumber,email,street,city,state,zip,password,userId);
+						int result=data.AccountUpdate(firstName,lastName,phoneNumber,email,street,city,state,zip,password,userId, routingNumber, accountNumber, url, companyName);
 						
 						//If user account entered
 						if(result == 1)
