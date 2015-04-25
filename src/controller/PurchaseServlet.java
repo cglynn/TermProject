@@ -39,7 +39,154 @@ public class PurchaseServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//If remove user Clicked
+		//If update order clicked
+		if(request.getParameter("updateOrder") != null)
+		{
+			
+			String msg = "";
+			String orderIdString = request.getParameter("orderId");
+			if(orderIdString == null)
+			{
+				msg = "Order ID not supplied";
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
+				dispatcher.forward(request,  response);
+			}
+			else{
+				HttpSession session = request.getSession();
+				session.setAttribute("orderId", orderIdString);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/updateOrder.jsp");
+				dispatcher.forward(request,  response);
+			}
+		}
+		
+		//If update order info clicked
+		if(request.getParameter("updateOrderInfo") != null)
+		{
+			//Verify fields have been filled in
+			String msg = "";
+			
+			//Verify first name
+			String receiverName = request.getParameter("receiverName");
+			if(receiverName == null) receiverName = "";
+			if (receiverName.length() == 0)
+			{
+				msg = msg + " Please enter Receiver Name.<br>";
+			}
+			else if(receiverName.length() > 20)
+			{
+				msg = msg + " Receiver name can only be 20 characters long.<br>";
+			}
+			
+			//Verify Street
+			String street = request.getParameter("street");
+			if(street == null) street = "";
+			if (street.length() == 0)
+			{
+				msg =msg + " Please enter Street.<br>";
+			}
+			else if(street.length() > 20)
+			{
+				msg = msg + " Street can only be 20 characters long.<br>";
+			}
+			
+			//Verify City
+			String city = request.getParameter("city");
+			if(city == null) city = "";
+			if (city.length() == 0)
+			{
+				msg =msg + " Please enter City.<br>";
+			}
+			else if(city.length() > 20)
+			{
+				msg = msg + " City can only be 20 characters long.<br>";
+			}
+			
+			//Verify State
+			String state = request.getParameter("state");
+			if(state == null) city = "";
+			if (state.length() == 0)
+			{
+				msg =msg + " Please enter State.<br>";
+			}
+			else if(state.length() > 20)
+			{
+				msg = msg + " State can only be 20 characters long.<br>";
+			}
+			
+			//Verify Zip
+			String zip = request.getParameter("zip");
+			if(zip == null) zip = "";
+			if (zip.length() == 0)
+			{
+				msg =msg + " Please enter Zip.<br>";
+			}
+			else if(zip.length() > 20)
+			{
+				msg = msg + " Zip can only be 20 characters long.<br>";
+			}
+			
+				
+			//If issues with form display message
+			if(!msg.equals("")){
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/purchase.jsp");
+				dispatcher.forward(request,  response);
+			}
+			//Update Order
+			else{
+				CatalogDAO data = new CatalogDAO();
+			
+				try {
+
+						HttpSession session = request.getSession();
+						User user = (User)session.getAttribute("user");
+						int userId = user.getUserId();
+						int orderId = Integer.parseInt((String)session.getAttribute("orderId"));
+						data.updateOrder(orderId,  receiverName,  street, city, state, zip);
+						
+						//Update order info in memory
+						Orders orders = data.getBuyerOrder(userId);
+						session.setAttribute("orders", orders);
+						
+						msg = "Order updated successfully!";
+						
+						request.setAttribute("msg", msg);
+						RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/updateOrder.jsp");
+						dispatcher.forward(request,  response);
+						
+					}
+				 catch (SQLException e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				} catch (Throwable e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				}
+			
+				//If issues with form display message
+				if(!msg.equals("")){
+					request.setAttribute("msg", msg);
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/updateOrder.jsp");
+					dispatcher.forward(request,  response);
+				}
+				try {
+					data.connection.DB_Close();
+				} catch (Throwable e) {
+					msg = "Class Not Found Exception " + e.toString();
+					e.printStackTrace();
+				}
+			
+				
+				
+			}
+			
+		}
+		
+		
+		
+		
+		//If purchase Clicked
 		if(request.getParameter("purchase") != null)
 		{
 			//Verify fields have been filled in
@@ -187,7 +334,7 @@ public class PurchaseServlet extends HttpServlet {
 					msg = "SQL Exception " + e.toString();
 					e.printStackTrace();
 				} catch (Throwable e) {
-					// TODO Auto-generated catch block
+					msg = "SQL Exception " + e.toString();
 					e.printStackTrace();
 				}
 			

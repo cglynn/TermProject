@@ -607,7 +607,7 @@ public void addItemToList(List list) throws SQLException
 		connection.ps.setString(5, zip);
 		connection.ps.setInt(6, orderId);
 		
-    connection.ps.executeUpdate();
+		connection.ps.executeUpdate();
 
   }
   
