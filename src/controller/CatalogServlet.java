@@ -51,6 +51,22 @@ public class CatalogServlet extends HttpServlet {
 			dispatcher.forward(request,  response);
 		}
 		
+		//Check to see if Message Seller was clicked.
+		if(request.getParameter("messageSeller") != null){
+			HttpSession session = request.getSession();
+			String receiverIdString = request.getParameter("sellerId");
+			if(receiverIdString == null)
+			{
+				String msg = "Seller ID missing";
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
+				dispatcher.forward(request, response);
+			}
+			session.setAttribute("receiverId", receiverIdString);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
 		//Check to see if Rate Product was clicked.
 		if(request.getParameter("rateProduct") != null){
 			String productId = request.getParameter("productId");

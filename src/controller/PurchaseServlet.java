@@ -42,6 +42,23 @@ public class PurchaseServlet extends HttpServlet {
 		String msg = "";
 		String orderIdString = "";
 		
+		//Check to see if Message Buyer was clicked.
+		if(request.getParameter("contactBuyer") != null){
+			HttpSession session = request.getSession();
+			String receiverIdString = request.getParameter("buyerId");
+			if(receiverIdString == null)
+			{
+				msg = "Buyer ID missing";
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
+				dispatcher.forward(request, response);
+			}
+			session.setAttribute("receiverId", receiverIdString);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
+		
 		//If Delete Order was clicked
 		if(request.getParameter("deleteOrder") != null)
 		{

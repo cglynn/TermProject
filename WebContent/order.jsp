@@ -77,22 +77,25 @@ else{
 						out.print("<td>");
 						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
 						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
-						out.print("<input type='submit' name='updateOrder' value='Update Order' /></form>");
+						out.print("<input type='submit' name='updateOrder' value='Update Order' />");
+						out.print("<input type='submit' name='deleteOrder' value='Delete Order' /></form>");
 						out.print("</td>");
 					}
 				}
 				
 				if(user.getUserType() == userType.seller.value)
 				{
+					out.print("<td>");
 					if(order.getShippingStatus() == Shipped.Packing.value)
 					{
 						//If order has not shipped display update order button.
-						out.print("<td>");
 						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
 						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
-						out.print("<input type='submit' name='shipOrder' value='Ship Order' /></form>");
-						out.print("</td>");
+						out.print("<input type='submit' name='shipOrder' value='Ship Order' />");
 					}
+					out.print("<input type='hidden' name='buyerId' value='"+order.getBuyerId()+"'>");
+					out.print("<input type='submit' name='contactBuyer' value='Contact Buyer' /></form>");
+					out.print("</td>");
 				}
 				
 				if(user.getUserType() == userType.admin.value)

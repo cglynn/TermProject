@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.Catalog;
+import model.Product;
+import model.ProductSeller;
+import model.User;
 import dao.CatalogDAO;
+import dao.MessageDAO;
 
 /**
  * Servlet implementation class ReviewServlet
@@ -62,9 +68,33 @@ public class ReviewServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			
+			//Mail all sellers of product.
+			Catalog catalog = (Catalog)session.getAttribute("catalog");
+			Product product = catalog.getProductById(productId);
+			ListIterator<ProductSeller> sellers = product.getSellers();
+			ProductSeller seller = null;
+			MessageDAO data = new MessageDAO();
+			User user = (User)session.getAttribute("user");
+			String message = "Your product: " + product.getName() + " was reviewed";
+			while(sellers.hasNext())
+			{
+				seller = sellers.next();
+				try {
+					data.sendMessage(seller.getSellerId(), user.getUserId() , message);
+				} catch (SQLException e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}
+				
+			}
 			
 				msg = "Rating saved successfully!";
-			
+				try {
+					data.connection.DB_Close();
+				} catch (Throwable e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}
 				request.setAttribute("msg", msg);
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/review.jsp");
 				dispatcher.forward(request,  response);
