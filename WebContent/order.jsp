@@ -16,6 +16,7 @@
 <%@ page import="model.Orders" %>
 <%@ page import="model.Catalog" %>
 <%@ page import="enums.userType" %>
+<%@ page import="enums.Shipped" %>
 <%@ page import= "java.util.Vector" %>
 <%@ page import = "java.util.ListIterator" %>
 <% 
@@ -48,9 +49,7 @@ if (!loggedIn)
 		}
 else{
 	out.print("<p>Hello " + user.getFirstName() + " " + user.getLastName() + "</p>");
-	//Display buyers view
-	if(user.getUserType() == userType.buyer.value)
-	{
+
 		
 		Orders orders = (Orders)session.getAttribute("orders");
 		if(orders.orders != null)
@@ -60,22 +59,55 @@ else{
 			Address shippingAddress = new Address();
 			
 			ListIterator<Order> orderIterator = orders.getOrders();
+			out.print("<table border='line'><tr><td>Order ID</td><td>Receiver</td><td>Tax</td><td>Total</td><td>Time</td><td>Shipped</td><td>Street</td><td>City</td><td>State</td><td>Zip</td><td></td></tr>");
+			
 			while(orderIterator.hasNext())
 			{
 				order = orderIterator.next();
 				//Print table headings
 				shippingAddress = order.getShippingAddress();
-				out.print("<table border='line'><tr><td>Receiver</td><td>Tax</td><td>Total</td><td>Time</td><td>Shipped</td><td>Street</td><td>City</td><td>State</td><td>Zip</td></tr>");
-				out.print("<tr><td>" + order.getReceiverName() + "</td><td>" + catalog.getDecimalString(order.getTax()) + "</td><td>" + catalog.getDecimalString(order.getTotalPrice()) + "</td><td>" + order.getTime() + "</td><td>" + order.getShippingStatus() + "</td><td>" + shippingAddress.getStreet() + "</td><td>" + shippingAddress.getCity() + "</td><td>" + shippingAddress.getState() + "</td><td>" + shippingAddress.getZip() + "</td></tr>");
-				out.print("</table>");
+				
+				out.print("<tr><td>"+order.getOrderId()+"</td><td>" + order.getReceiverName() + "</td><td>" + catalog.getDecimalString(order.getTax()) + "</td><td>" + catalog.getDecimalString(order.getTotalPrice()) + "</td><td>" + order.getTime() + "</td><td>" + order.getShippedString(order.getShippingStatus()) + "</td><td>" + shippingAddress.getStreet() + "</td><td>" + shippingAddress.getCity() + "</td><td>" + shippingAddress.getState() + "</td><td>" + shippingAddress.getZip() + "</td>");
+				
+				if(user.getUserType() == userType.buyer.value)
+				{
+					if(order.getShippingStatus() == Shipped.Packing.value)
+					{
+						//If order has not shipped display update order button.
+						out.print("<td>");
+						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
+						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
+						out.print("<input type='submit' name='updateOrder' value='Update Order' />");
+						out.print("</td>");
+					}
+				}
+				
+				if(user.getUserType() == userType.seller.value)
+				{
+					if(order.getShippingStatus() == Shipped.Packing.value)
+					{
+						//If order has not shipped display update order button.
+						out.print("<td>");
+						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
+						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
+						out.print("<input type='submit' name='shipOrder' value='Ship Order' />");
+						out.print("</td>");
+					}
+				}
+				
+				out.print("</tr>");
+				
+				
 			}
+			
+			out.print("</table>");
 		}
 		//Else user does not have any orders
 		else{
 			out.print("No orders to display");
 		}
 		
-	}
+	
 }
 %>
 </body>

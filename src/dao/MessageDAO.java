@@ -14,6 +14,7 @@ public class MessageDAO {
 
   public void messageDAO() {
   }
+  
 
   public Messages getMessageByUserId(int receiverId) throws SQLException {
 
@@ -23,7 +24,7 @@ public class MessageDAO {
 			
 		  	messages.messages = new Vector<Message>();
 			//create query
-			String sql = "SELECT messageId, senderId, message, receiverId, firstName, lastName FROM message m JOIN user u on m.senderId = u.userId WHERE receiverId = ?";
+			String sql = "SELECT messageId, senderId, message, receiverId, firstName, lastName FROM message m JOIN user u on m.senderId = u.userId WHERE receiverId = ? Order by messageId desc";
 			
 			//create prepared statement
 			connection.ps = connection.conn.prepareStatement(sql);

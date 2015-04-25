@@ -17,6 +17,7 @@ import model.User;
 import dao.CatalogDAO;
 import dao.MessageDAO;
 import enums.userType;
+import enums.Admin;
 
 /**
  * Servlet implementation class NavServlet
@@ -129,25 +130,38 @@ public class NavServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			User user = (User)session.getAttribute("user");
 			String msg = "";
+			CatalogDAO data = new CatalogDAO();
+			Orders orders = new Orders();
+			
 			//Load buyer orders
 			if(user.getUserType() == userType.buyer.value)
 			{
-				CatalogDAO data = new CatalogDAO();
-				Orders orders = new Orders();
 				try {
 					orders = data.getBuyerOrder(user.getUserId() );
 				} catch (SQLException e) {
 					msg = msg + " Sql Exception " + e.toString();
 					e.printStackTrace();
-				}
-				
-				session.setAttribute("orders", orders);
+				}	
+			}
+			
+			//Load seller orders
+			if(user.getUserType() == userType.seller.value)
+			{
 				try {
-					data.connection.DB_Close();
-				} catch (Throwable e) {
+					orders = data.getSellerOrder(user.getUserId() );
+				} catch (SQLException e) {
 					msg = msg + " Sql Exception " + e.toString();
 					e.printStackTrace();
-				}
+				}	
+			}
+			
+			session.setAttribute("orders", orders);
+			
+			try {
+				data.connection.DB_Close();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
 			}
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
@@ -179,7 +193,7 @@ public class NavServlet extends HttpServlet {
 		if(request.getParameter("messageAdmin") != null)
 		{
 			HttpSession session = request.getSession();
-			session.setAttribute("receiverId", "1");
+			session.setAttribute("receiverId", String.valueOf(Admin.Admin.value));
 			session.setAttribute("receiverName", "Admin");
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
 			dispatcher.forward(request,  response);

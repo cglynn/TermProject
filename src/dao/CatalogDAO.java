@@ -587,6 +587,30 @@ public void addItemToList(List list) throws SQLException
   public void addProductWishList() {
   }
 
+  public void updateOrder(int orderId, String receiverName, String street, String city, String state, String zip) throws SQLException
+  {
+		//create query
+		String sql = "Update orders set receiverName =?, street=?, city=?, state=?, zip=? Where orderId = ? ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setString(1, receiverName);
+		connection.ps.setString(2, street);
+		connection.ps.setString(3, city);
+		connection.ps.setString(4, state);
+		connection.ps.setString(5, zip);
+		connection.ps.setInt(6, orderId);
+		
+    connection.ps.executeUpdate();
+
+  }
+  
   public int createOrder(int ownerId, double tax, double subTotal, String receiverName, String accountNumber, String street, String city, String state, String zip   ) throws SQLException {
 
 		int orderId = -1;
@@ -639,7 +663,56 @@ public void addItemToList(List list) throws SQLException
   public Orders getBuyerOrder(int userId) throws SQLException {
 
 		//create query
-		String sql = "Select  city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE ownerId = ? ";
+		String sql = "Select  city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE ownerId = ? order by orderId desc ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, userId);
+
+		
+		connection.executeQuery();
+		
+		Orders orders = new Orders();
+		orders.orders = new Vector<Order>();
+		
+		try {
+			while(connection.result.next()) 
+			{	 
+				String city = connection.result.getString(1);
+				String state = connection.result.getString(2);
+				String street = connection.result.getString(3);
+				String zip = connection.result.getString(4);
+				int listId = connection.result.getInt(5);
+				String receiverName = connection.result.getString(6);
+				double tax = connection.result.getDouble(7);
+				double totalPrice = connection.result.getDouble(8);
+				String time = connection.result.getString(9);
+				int orderId = connection.result.getInt(10);
+				int shippingStatus = connection.result.getInt(11);
+
+				Address shipping = new Address(city, state, street, zip);
+				List list = getListByListId(listId);
+				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, userId);
+				orders.orders.add(order);
+			}
+		}
+		catch (SQLException ex) {
+			Logger.getLogger(CatalogDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+		return orders;	  
+  }
+  
+  public Orders getSellerOrder(int userId) throws SQLException {
+
+		//create query
+		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId = (select productSellerId from productSeller where sellerId = ?)))order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();

@@ -239,6 +239,30 @@ public class AuthDAO {
 				return connection.ps.executeUpdate();					
 		  }
 		  
+		  public int UpdateSeller(int userId, int routingNumber, int accountNumber, String url, String companyName) throws SQLException{
+			//create query
+				String sql = "Update user set  routingNumber=?, accountNumber=?, url=?, companyName =? where userId=? ";
+				
+				//create connection
+				connection = new ConnectionInfo();
+				//getConnection();
+				
+				//create prepared statement
+				connection.ps = connection.conn.prepareStatement(sql);
+				
+				//set variable in prepared statement
+				
+				connection.ps.setInt(1,routingNumber);
+				connection.ps.setInt(2,accountNumber);
+				connection.ps.setString(3,url);
+				connection.ps.setString(4,companyName);
+				
+				
+				connection.ps.setInt(5,userId);
+			
+				return connection.ps.executeUpdate();					
+		  }
+		  
 		//Adds list for user.  If not successful returns -1 else listId.
 			public int createList(int userId, int listType, Integer orderId) throws SQLException  {
 

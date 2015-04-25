@@ -23,6 +23,23 @@ public class Order {
   
   public List productList;
 
+public String getShippedString(int value)
+	{
+		String shipped = "";
+		
+		if(value == 0)
+		{
+			shipped = "Not Shipped";
+		}
+		else if(value == 1)
+		{
+			shipped = "Shipped";
+		}
+		
+		return shipped;
+		
+	}
+  
   public Order() {
 	  this.buyerId = -1;
 	  this.receiverName = "";

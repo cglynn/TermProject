@@ -50,8 +50,8 @@ else{
 		
 		if(user.getUserType() == userType.seller.value)
 		{
-			out.print("<tr><td>Routing Number:</td><td><input type='text' name='routingNumber'  maxlength='20' size='20'  value= "+ user.getRoutingNumber() +" /></td></tr>");
-			out.print("<tr><td>Account Number:</td><td><input type='text' name='accountNumber'  maxlength='20' size='20'  value= "+ user.getAccountNumber() +" /></td></tr>");
+			out.print("<tr><td>Routing Number:</td><td><input type='text' name='routingNumber'  maxlength='9' size='20'  value= "+ user.getRoutingNumber() +" /></td></tr>");
+			out.print("<tr><td>Account Number:</td><td><input type='text' name='accountNumber'  maxlength='9' size='20'  value= "+ user.getAccountNumber() +" /></td></tr>");
 			out.print("<tr><td>URL:</td><td><input type='text' name='url'  maxlength='20' size='20'  value= "+ user.getUrl() +" /></td></tr>");
 			out.print("<tr><td>Company Name:</td><td><input type='text' name='companyName'  maxlength='20' size='20'  value= "+ user.getCompanyName() +" /></td></tr>");
 		}

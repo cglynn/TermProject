@@ -18,5 +18,26 @@ public class Orders {
   {
 	  return orders.listIterator();
   }
+  
+  //returns order or null if not found.
+  public Order getOrderById(int orderId)
+  {
+	  Order order = null;
+	  Order temp = null;
+	  
+	  ListIterator<Order> orders = this.getOrders();
+	  while(orders.hasNext())
+	  {
+		  temp = orders.next();
+		  if(temp.getOrderId() == orderId)
+		  {
+			  order = temp;
+			  break;
+		  }
+	  }
+	  
+	  
+	  return order;
+  }
 
 }
