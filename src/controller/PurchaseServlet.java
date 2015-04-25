@@ -39,12 +39,56 @@ public class PurchaseServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//If Ship Order was clicked
+		String msg = "";
+		String orderIdString = "";
 		
+		//If Delete Order was clicked
+		if(request.getParameter("deleteOrder") != null)
+		{
+			msg = "";
+			orderIdString = request.getParameter("orderId");
+			if(orderIdString == null)
+			{
+				msg = "Order ID not supplied";
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
+				dispatcher.forward(request,  response);
+			}
+			else{
+				HttpSession session = request.getSession();
+				User user = (User)session.getAttribute("user");
+				int orderId = Integer.parseInt(orderIdString);
+				CatalogDAO data = new CatalogDAO();
+				try {
+					data.deleteOrder(orderId);
+					msg = "Order deleted";
+				} catch (SQLException e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				}
+				//Reload orders
+				Orders orders = null;
+				try {
+					 orders = data.getSellerOrder(user.getUserId());
+				} catch (SQLException e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				}
+				
+				session.setAttribute("orders", orders);
+				request.setAttribute("msg", msg);
+				
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
+				dispatcher.forward(request,  response);
+			}
+		}
+		
+		
+		//If Ship Order was clicked
 		if(request.getParameter("shipOrder") != null)
 		{
-			String msg = "";
-			String orderIdString = request.getParameter("orderId");
+			msg = "";
+			orderIdString = request.getParameter("orderId");
 			if(orderIdString == null)
 			{
 				msg = "Order ID not supplied";
@@ -85,8 +129,8 @@ public class PurchaseServlet extends HttpServlet {
 		if(request.getParameter("updateOrder") != null)
 		{
 			
-			String msg = "";
-			String orderIdString = request.getParameter("orderId");
+			msg = "";
+			orderIdString = request.getParameter("orderId");
 			if(orderIdString == null)
 			{
 				msg = "Order ID not supplied";
@@ -106,7 +150,7 @@ public class PurchaseServlet extends HttpServlet {
 		if(request.getParameter("updateOrderInfo") != null)
 		{
 			//Verify fields have been filled in
-			String msg = "";
+			msg = "";
 			
 			//Verify first name
 			String receiverName = request.getParameter("receiverName");
@@ -232,7 +276,7 @@ public class PurchaseServlet extends HttpServlet {
 		if(request.getParameter("purchase") != null)
 		{
 			//Verify fields have been filled in
-			String msg = "";
+			msg = "";
 			
 			//Verify first name
 			String receiverName = request.getParameter("receiverName");

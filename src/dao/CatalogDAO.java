@@ -713,7 +713,7 @@ public void addItemToList(List list) throws SQLException
   public Orders getSellerOrder(int userId) throws SQLException {
 
 		//create query
-		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId = (select productSellerId from productSeller where productSellerId = ?)))order by orderId desc ";
+		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus, ownerId FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId = (select productSellerId from productSeller where productSellerId = ?)))order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();
@@ -745,10 +745,57 @@ public void addItemToList(List list) throws SQLException
 				String time = connection.result.getString(9);
 				int orderId = connection.result.getInt(10);
 				int shippingStatus = connection.result.getInt(11);
+				int ownerId = connection.result.getInt(12);
 
 				Address shipping = new Address(city, state, street, zip);
 				List list = getListByListId(listId);
-				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, userId);
+				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, ownerId);
+				orders.orders.add(order);
+			}
+		}
+		catch (SQLException ex) {
+			Logger.getLogger(CatalogDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+		return orders;	  
+  }
+  
+  public Orders getAdminOrder() throws SQLException {
+
+		//create query
+		String sql = "Select  city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus, ownerId FROM orders o JOIN list l on o.orderId = l.orderId order by orderId desc ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		connection.executeQuery();
+		
+		Orders orders = new Orders();
+		orders.orders = new Vector<Order>();
+		
+		try {
+			while(connection.result.next()) 
+			{	 
+				String city = connection.result.getString(1);
+				String state = connection.result.getString(2);
+				String street = connection.result.getString(3);
+				String zip = connection.result.getString(4);
+				int listId = connection.result.getInt(5);
+				String receiverName = connection.result.getString(6);
+				double tax = connection.result.getDouble(7);
+				double totalPrice = connection.result.getDouble(8);
+				String time = connection.result.getString(9);
+				int orderId = connection.result.getInt(10);
+				int shippingStatus = connection.result.getInt(11);
+				int ownerId = connection.result.getInt(12);
+
+				Address shipping = new Address(city, state, street, zip);
+				List list = getListByListId(listId);
+				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, ownerId);
 				orders.orders.add(order);
 			}
 		}
@@ -841,7 +888,53 @@ public void addItemToList(List list) throws SQLException
   public void removeItemWishList() {
   }
 
-  public void deleteOrder() {
+  public void deleteOrder(int orderId) throws SQLException {
+		
+	    //create connection
+		connection = new ConnectionInfo();
+	  
+		deleteListItems(orderId);
+		deleteList(orderId);
+
+		//create query
+		String sql = "DELETE FROM orders Where orderId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, orderId);
+		
+		connection.ps.executeUpdate();
+	  
+  }
+  
+  private void deleteListItems(int orderId) throws SQLException
+  {
+		//create query
+		String sql = "DELETE FROM listItem Where listId in (Select listId From list where orderId = ?) ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, orderId);
+		
+		connection.ps.executeUpdate();
+  }
+  
+  private void deleteList(int orderId) throws SQLException
+  {
+		//create query
+		String sql = "DELETE FROM list WHERE orderId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, orderId);
+		
+		connection.ps.executeUpdate();
   }
 
   public void removeProductFromOrder() {

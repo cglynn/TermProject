@@ -155,6 +155,17 @@ public class NavServlet extends HttpServlet {
 				}	
 			}
 			
+			//Load Admin orders
+			if(user.getUserType() == userType.admin.value)
+			{
+				try {
+					orders = data.getAdminOrder( );
+				} catch (SQLException e) {
+					msg = msg + " Sql Exception " + e.toString();
+					e.printStackTrace();
+				}	
+			}
+			
 			session.setAttribute("orders", orders);
 			
 			try {
