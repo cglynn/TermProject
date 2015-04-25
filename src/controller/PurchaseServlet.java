@@ -39,6 +39,48 @@ public class PurchaseServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//If Ship Order was clicked
+		
+		if(request.getParameter("shipOrder") != null)
+		{
+			String msg = "";
+			String orderIdString = request.getParameter("orderId");
+			if(orderIdString == null)
+			{
+				msg = "Order ID not supplied";
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
+				dispatcher.forward(request,  response);
+			}
+			else{
+				HttpSession session = request.getSession();
+				User user = (User)session.getAttribute("user");
+				int orderId = Integer.parseInt(orderIdString);
+				CatalogDAO data = new CatalogDAO();
+				try {
+					data.shipOrder(orderId);
+					msg = "Order shipped";
+				} catch (SQLException e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				}
+				//Reload orders
+				Orders orders = null;
+				try {
+					 orders = data.getSellerOrder(user.getUserId());
+				} catch (SQLException e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				}
+				
+				session.setAttribute("orders", orders);
+				request.setAttribute("msg", msg);
+				
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
+				dispatcher.forward(request,  response);
+			}
+		}
+		
 		//If update order clicked
 		if(request.getParameter("updateOrder") != null)
 		{

@@ -59,7 +59,7 @@ else{
 			Address shippingAddress = new Address();
 			
 			ListIterator<Order> orderIterator = orders.getOrders();
-			out.print("<table border='line'><tr><td>Order ID</td><td>Receiver</td><td>Tax</td><td>Total</td><td>Time</td><td>Shipped</td><td>Street</td><td>City</td><td>State</td><td>Zip</td><td></td></tr>");
+			out.print("<table border='line'><tr><td>Order ID</td><td>Receiver</td><td>Tax</td><td>Total</td><td>Time</td><td>Shipped</td><td>Street</td><td>City</td><td>State</td><td>Zip</td></tr>");
 			
 			while(orderIterator.hasNext())
 			{
@@ -77,7 +77,7 @@ else{
 						out.print("<td>");
 						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
 						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
-						out.print("<input type='submit' name='updateOrder' value='Update Order' />");
+						out.print("<input type='submit' name='updateOrder' value='Update Order' /></form>");
 						out.print("</td>");
 					}
 				}
@@ -90,7 +90,7 @@ else{
 						out.print("<td>");
 						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
 						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
-						out.print("<input type='submit' name='shipOrder' value='Ship Order' />");
+						out.print("<input type='submit' name='shipOrder' value='Ship Order' /></form>");
 						out.print("</td>");
 					}
 				}

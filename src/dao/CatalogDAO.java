@@ -16,6 +16,7 @@ import model.Catalog;
 import model.ReviewsRanking;
 import model.ProductSeller;
 import model.Image;
+import enums.Shipped;
 
 import java.util.Vector;
 import java.util.ListIterator;
@@ -712,7 +713,7 @@ public void addItemToList(List list) throws SQLException
   public Orders getSellerOrder(int userId) throws SQLException {
 
 		//create query
-		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId = (select productSellerId from productSeller where sellerId = ?)))order by orderId desc ";
+		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId = (select productSellerId from productSeller where productSellerId = ?)))order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();
@@ -756,6 +757,28 @@ public void addItemToList(List list) throws SQLException
 			}
 
 		return orders;	  
+  }
+ 
+  public void shipOrder(int orderId   ) throws SQLException {
+
+		//create query
+		String sql = "UPDATE orders SET shippingStatus = ? WHERE orderId = ? ";
+		
+		//create connection
+		connection = new ConnectionInfo();
+		//getConnection();
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, Shipped.Shipped.value);
+		connection.ps.setInt(2, orderId);
+
+
+		
+     connection.ps.executeUpdate();
+  
   }
   
   public void switchShopCartToOrderList(int listId, int orderId   ) throws SQLException {
