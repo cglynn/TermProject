@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import model.Messages;
 import model.Message;
 

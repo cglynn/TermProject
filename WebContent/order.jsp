@@ -19,6 +19,9 @@
 <%@ page import="enums.Shipped" %>
 <%@ page import= "java.util.Vector" %>
 <%@ page import = "java.util.ListIterator" %>
+
+
+
 <% 
 
 User user = (User)session.getAttribute("user");
@@ -66,8 +69,7 @@ else{
 				order = orderIterator.next();
 				//Print table headings
 				shippingAddress = order.getShippingAddress();
-				
-				out.print("<tr><td>"+order.getOrderId()+"</td><td>" + order.getReceiverName() + "</td><td>" + catalog.getDecimalString(order.getTax()) + "</td><td>" + catalog.getDecimalString(order.getTotalPrice()) + "</td><td>" + order.getTime() + "</td><td>" + order.getShippedString(order.getShippingStatus()) + "</td><td>" + shippingAddress.getStreet() + "</td><td>" + shippingAddress.getCity() + "</td><td>" + shippingAddress.getState() + "</td><td>" + shippingAddress.getZip() + "</td>");
+				out.print("<tr><td>"+order.getOrderId()+"</td><td>" + order.getReceiverName() + "</td><td>" + catalog.getDecimalString(order.getTax()) + "</td><td>" + catalog.getDecimalString(order.getTotalPrice()) + "</td><td>" + order.getTime()+ "</td><td>" + order.getShippedString(order.getShippingStatus()) + "</td><td>" + shippingAddress.getStreet() + "</td><td>" + shippingAddress.getCity() + "</td><td>" + shippingAddress.getState() + "</td><td>" + shippingAddress.getZip() + "</td>");
 				
 				if(user.getUserType() == userType.buyer.value)
 				{

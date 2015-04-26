@@ -2,7 +2,10 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,12 +17,15 @@ import javax.servlet.http.HttpSession;
 import model.Catalog;
 import model.List;
 import model.ListItem;
+import model.Order;
 import model.Orders;
 import model.Product;
 import model.ProductSeller;
 import model.User;
 import dao.CatalogDAO;
 import dao.AuthDAO;
+import dao.MessageDAO;
+import enums.Admin;
 import enums.ListType;
 
 /**
@@ -239,11 +245,13 @@ public class PurchaseServlet extends HttpServlet {
 			//Update Order
 			else{
 				CatalogDAO data = new CatalogDAO();
+				MessageDAO messageData = new MessageDAO();
 			
 				try {
 
 						HttpSession session = request.getSession();
 						User user = (User)session.getAttribute("user");
+						Order order = (Order)session.getAttribute("order");
 						int userId = user.getUserId();
 						int orderId = Integer.parseInt((String)session.getAttribute("orderId"));
 						data.updateOrder(orderId,  receiverName,  street, city, state, zip);
@@ -251,6 +259,30 @@ public class PurchaseServlet extends HttpServlet {
 						//Update order info in memory
 						Orders orders = data.getBuyerOrder(userId);
 						session.setAttribute("orders", orders);
+						
+						//Email Sellers that order has been updated
+						Catalog catalog = (Catalog)session.getAttribute("catalog");
+						List list = data.getListByOrderId(orderId);
+						Set<Integer> sellerSet = new HashSet<Integer>();
+						ListIterator<ListItem> items =list.getListItems();
+						ListItem item = null;
+						ProductSeller seller = null;
+						Product product = null;
+						String message = "Order " + order.getOrderId() + " has been updated.";
+						while(items.hasNext())
+						{
+							item = items.next();
+							product = catalog.getProductById(item.productId);
+							seller = product.getProductSellerById(item.sellerId);
+							sellerSet.add(seller.getSellerId());
+						}
+						Integer sellerId = -1;
+						Iterator<Integer> sellerIds = sellerSet.iterator();
+						while(sellerIds.hasNext())
+						{
+							sellerId = sellerIds.next();
+							messageData.sendMessage(sellerId, Admin.Admin.value, message);
+						}
 						
 						msg = "Order updated successfully!";
 						
@@ -275,6 +307,7 @@ public class PurchaseServlet extends HttpServlet {
 				}
 				try {
 					data.connection.DB_Close();
+					messageData.connection.DB_Close();
 				} catch (Throwable e) {
 					msg = "Class Not Found Exception " + e.toString();
 					e.printStackTrace();

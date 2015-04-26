@@ -585,6 +585,36 @@ public void addItemToList(List list) throws SQLException
 	  return list;
   }
   
+  //returns list, else null.
+  public List getListByOrderId(int orderId) throws SQLException
+  {
+	  List list = null;
+
+		//create query
+		String sql = "SELECT listId, orderId, listType, ownerId FROM list WHERE orderId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, orderId);
+		
+		connection.executeQuery();
+
+		try{
+			if(connection.result.next())
+			{
+				list = new List(connection.result.getInt(1), connection.result.getInt(3) ,connection.result.getInt(4), connection.result.getInt(2) );
+				addItemToList(list);
+			}
+		}
+		catch (SQLException ex) {
+			Logger.getLogger(AuthDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+
+	  return list;
+  }
+  
   public void addProductWishList() {
   }
 
