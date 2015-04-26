@@ -120,6 +120,70 @@ public class AccountServlet extends HttpServlet {
 			dispatcher.forward(request,  response);
 		}
 		
+		//If approve seller Clicked
+		if(request.getParameter("approveSeller") != null)
+		{
+			String msg = "";
+			
+			int userId = Integer.parseInt(request.getParameter("userIdHidden"));
+			
+			//get session with user object
+			HttpSession session = request.getSession();
+			
+			//Create connection
+			AuthDAO dataAuth = new AuthDAO();
+			
+			//Update Data
+			try {
+				dataAuth.approveSeller(userId);
+			} catch (SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			//If issues with form display message
+			if(!msg.equals("")){
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+				dispatcher.forward(request,  response);
+			}
+			
+			msg = "Account updated to seller Successfully!";
+			request.setAttribute("msg", msg);
+
+			//Reload user Data
+			AuthDAO data = new AuthDAO();
+			try {
+				Users users = data.getUsers();
+				session.setAttribute("users", users);
+				data.connection.DB_Close();
+			} catch (ClassNotFoundException | SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			//Send message to new seller.
+			User user = (User)session.getAttribute("user");
+			MessageDAO dataMessage = new MessageDAO();
+			try {
+				dataMessage.sendMessage(userId, user.getUserId(), "Seller account approved.");
+				dataMessage.connection.DB_Close();
+			} catch (SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			request.setAttribute("msg", msg);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
 		//Navigate to request Seller Account Page
 		if(request.getParameter("requestSellerAccount") != null)
 		{
@@ -139,6 +203,35 @@ public class AccountServlet extends HttpServlet {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
 			dispatcher.forward(request,  response);
 		}
+		
+		//If deny seller button clicked
+		if(request.getParameter("denySeller") != null)
+		{
+			String msg = "";
+			
+			HttpSession session = request.getSession();
+			User user = (User)session.getAttribute("user");
+			int userId = Integer.parseInt(request.getParameter("userIdHidden"));
+			MessageDAO dataMessage = new MessageDAO();
+			try {
+				dataMessage.sendMessage(userId, user.getUserId(), "Seller account denied.");
+				dataMessage.connection.DB_Close();
+			} catch (SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			
+				msg = "Seller Account denied successfully.";
+			
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+				dispatcher.forward(request,  response);
+		}
+
 		
 		//If request Seller Account Clicked
 		//If update account Clicked

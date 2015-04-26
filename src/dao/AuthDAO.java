@@ -3,10 +3,14 @@ import java.sql.*;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import model.User;
 import model.Address;
 import model.Users;
+
 import java.util.ListIterator;
+
+import enums.userType;
 
 
 /**
@@ -193,11 +197,15 @@ public class AuthDAO {
 					return success;
 				}
 		
-		  public void approveSeller() {
+		  public void approveSeller(int userId) throws SQLException {
+			  String sql="update user set userType =? where userId= ? ";
+			  connection= new ConnectionInfo();
+			  connection.ps = connection.conn.prepareStatement(sql);
+			  connection.ps.setInt(1, userType.seller.value);
+			  connection.ps.setInt(2, userId);
+			  connection.ps.executeUpdate();
 		  }
 
-		  public void denySeller() {
-		  }
 
 		  public void closeAccount(int uid) throws SQLException {
 			  //geethika

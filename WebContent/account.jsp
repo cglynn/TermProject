@@ -99,9 +99,14 @@ else{
 					out.print("<td> " + userInfo.getUserTypeString() + "</td>" );
 					out.print("<input type='hidden' name='userIdHidden' value='"+userInfo.getUserId()+"' />");
 					out.print("<input type='hidden' name='userNameHidden' value='"+userInfo.getFirstName() + " "+ userInfo.getLastName() +"' />");
-					out.print("<td><input type='submit' name='removeUserAdmin' value='Delete' /></td>");
-					out.print("<td><input type='submit' name='messageAdmin' value='Message' /></td>");
-					out.print("</tr></form>");
+					out.print("<td><input type='submit' name='removeUserAdmin' value='Delete' />");
+					out.print("<input type='submit' name='messageAdmin' value='Message' />");
+					if(userInfo.userType == userType.buyer.value)
+					{
+						out.print("<input type='submit' name='approveSeller' value='Approve Seller' />");
+						out.print("<input type='submit' name='denySeller' value='Deny Seller' />");
+					}
+					out.print("</td></tr></form>");
 				}
 			}
 			
