@@ -14,6 +14,8 @@ import model.Catalog;
 import model.Messages;
 import model.Orders;
 import model.User;
+import model.Users;
+import dao.AuthDAO;
 import dao.CatalogDAO;
 import dao.MessageDAO;
 import enums.userType;
@@ -85,6 +87,39 @@ public class NavServlet extends HttpServlet {
 		//If My Account button clicked
 		if(request.getParameter("myAccount") != null)
 		{
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
+		//If Accounts button clicked
+		if(request.getParameter("accounts") != null)
+		{
+			String msg = "";
+			
+			HttpSession session = request.getSession();
+			User user = (User)session.getAttribute("user");
+			if(user.getUserType() != userType.admin.value)
+			{
+				msg = "You have reached this page in error.";
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+				dispatcher.forward(request,  response);
+			}
+			
+			AuthDAO data = new AuthDAO();
+			try {
+				Users users = data.getUsers();
+				session.setAttribute("users", users);
+				data.connection.DB_Close();
+			} catch (ClassNotFoundException | SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			request.setAttribute("msg", msg);
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
 			dispatcher.forward(request,  response);
 		}

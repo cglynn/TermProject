@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.User;
+import model.Users;
 import dao.AuthDAO;
 import dao.MessageDAO;
 import enums.userType;
@@ -66,6 +67,56 @@ public class AccountServlet extends HttpServlet {
 			//Logout
 			session.invalidate();
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
+		//If remove user admin Clicked
+		if(request.getParameter("removeUserAdmin") != null)
+		{
+			String msg = "";
+			
+			int userId = Integer.parseInt(request.getParameter("userIdHidden"));
+			
+			//get session with user object
+			HttpSession session = request.getSession();
+			
+			//Create connection
+			AuthDAO dataAuth = new AuthDAO();
+			
+			//Update Data
+			try {
+				dataAuth.closeAccount(userId);
+			} catch (SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			//If issues with form display message
+			if(!msg.equals("")){
+				request.setAttribute("msg", msg);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+				dispatcher.forward(request,  response);
+			}
+			
+			msg = "Account Deleted Successfully!";
+			request.setAttribute("msg", msg);
+
+			//Reload user Data
+			AuthDAO data = new AuthDAO();
+			try {
+				Users users = data.getUsers();
+				session.setAttribute("users", users);
+				data.connection.DB_Close();
+			} catch (ClassNotFoundException | SQLException e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			} catch (Throwable e) {
+				msg = msg + " Sql Exception " + e.toString();
+				e.printStackTrace();
+			}
+			
+			request.setAttribute("msg", msg);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
 			dispatcher.forward(request,  response);
 		}
 		

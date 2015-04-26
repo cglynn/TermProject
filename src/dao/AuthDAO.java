@@ -1,10 +1,12 @@
 package dao;
 import java.sql.*;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import model.User;
 import model.Address;
+import model.Users;
+import java.util.ListIterator;
 
 
 /**
@@ -307,5 +309,40 @@ public class AuthDAO {
 				return listId;
 					
 				}
+			
+  public Users getUsers() throws SQLException, ClassNotFoundException
+  {
+  	Users users = new Users();
+	//create connection
+	connection = new ConnectionInfo();
+	Vector<Integer> userIds = new Vector<Integer>();
+  	users.users = new Vector<User>();
+	//create query
+	String sql = "SELECT userId From user Where isDeleted = 0";
+	
+	//create prepared statement
+	connection.ps = connection.conn.prepareStatement(sql);
+	
+	connection.executeQuery();
+
+	while(connection.result.next()) 
+	{
+		userIds.add(connection.result.getInt(1));
+		
+	}
+	
+	ListIterator<Integer> userIdIterator = userIds.listIterator();
+	int userId = -1;
+	while(userIdIterator.hasNext())
+	{
+		userId = userIdIterator.next();
+		User user = getUserById(userId);
+		users.users.add(user);
+	}
+
+	return users;
+  }
+  
+
 
 }

@@ -11,6 +11,9 @@
 <%@ page import="model.User" %>
 <%@ page import="enums.userType" %>
 <%@ page import="model.Address" %>
+<%@ page import="model.Users" %>
+<%@ page import= "java.util.Vector" %>
+<%@ page import = "java.util.ListIterator" %>
 <% 
 
 User user = (User)session.getAttribute("user");
@@ -65,6 +68,44 @@ else{
 		
 		out.print("</table></form>");
 		
+	}
+	else{
+		Users users = (Users)session.getAttribute("users");
+		if(users == null)
+		{
+			out.print("You have reached this page in error");
+		}
+		else{
+			//User is Admin
+
+			
+			
+			out.print("<table border='line'>");
+			out.print("<tr><td>ID</td><td>First Name</td><td>Last Name</td><td>Type</td></tr>");
+			
+			ListIterator<User> userIterator = users.getUsers();
+			User userInfo = null;
+			
+			while(userIterator.hasNext())
+			{
+				userInfo = userIterator.next();
+				out.print("<form name='AccountsForm' action='AccountServlet' method='post'>");
+				out.print("<tr>");
+				out.print("<td> " + userInfo.getUserId() + "</td>" );
+				out.print("<td> " + userInfo.getFirstName() + "</td>" );
+				out.print("<td> " + userInfo.getLastName() + "</td>" );
+				out.print("<td> " + userInfo.getUserTypeString() + "</td>" );
+				out.print("<input type='hidden' name='userIdHidden' value='"+userInfo.getUserId()+"' />");
+				
+				if(userInfo.getUserType() != userType.admin.value)
+				{
+					out.print("<td><input type='submit' name='removeUserAdmin' value='Delete' /></td>");
+				}
+				out.print("</tr></form>");
+			}
+			
+			out.print("</table>");
+		}
 	}
 }
 %>

@@ -35,9 +35,17 @@ else
 		out.write("<td><input type='submit' name='wishList' value='Wish List' /></td>");
 	}
 	
+	if(userNav.getUserType() != userType.admin.value)
+	{
+		out.write("<td><input type='submit' name='myAccount' value='My Account' /></td>");	
+	}
+	else
+	{
+		out.write("<td><input type='submit' name='accounts' value='Accounts' /></td>");	
+	}
+	
 	//Navigation for all logged in users.
 	out.write("<td><input type='submit' name='catalog' value='Catalog' /></td>");
-	out.write("<td><input type='submit' name='myAccount' value='My Account' /></td>");
 	out.write("<td><input type='submit' name='messages' value='Messages' /></td>");
 	out.write("<td><input type='submit' name='orders' value='Orders' /></td>");
 	out.write("<td><input type='submit' name='logout' value='Logout' /></td>");

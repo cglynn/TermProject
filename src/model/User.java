@@ -124,5 +124,24 @@ public class User {
 	  public Address getMailingAddress() {
 		  return mailingAddress;
 	  }
+	  
+	  public String getUserTypeString() 
+	  {
+	  	String type = "";
+	  	
+	  	switch(this.userType)
+	  	{
+		  	case 0: type = "buyer";
+		  		break;
+		  	case 1: type = "seller";
+		  		break;
+		  	case 2: type = "admin";
+		  		break;
+		  	default : type = "buyer";
+		  		break;
+	  	}
+	  	
+	  	return type;
+	  }
 	
 }
