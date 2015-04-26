@@ -128,6 +128,18 @@ public class AccountServlet extends HttpServlet {
 			dispatcher.forward(request,  response);
 		}
 		
+		//If Message Admin button clicked
+		if(request.getParameter("messageAdmin") != null)
+		{
+			String userId = request.getParameter("userIdHidden");
+			String userName = request.getParameter("userNameHidden");
+			HttpSession session = request.getSession();
+			session.setAttribute("receiverId", userId);
+			session.setAttribute("receiverName", userName);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/sendMessage.jsp");
+			dispatcher.forward(request,  response);
+		}
+		
 		//If request Seller Account Clicked
 		//If update account Clicked
 		if(request.getParameter("requestSellerAccountClick") != null)

@@ -89,19 +89,20 @@ else{
 			while(userIterator.hasNext())
 			{
 				userInfo = userIterator.next();
-				out.print("<form name='AccountsForm' action='AccountServlet' method='post'>");
-				out.print("<tr>");
-				out.print("<td> " + userInfo.getUserId() + "</td>" );
-				out.print("<td> " + userInfo.getFirstName() + "</td>" );
-				out.print("<td> " + userInfo.getLastName() + "</td>" );
-				out.print("<td> " + userInfo.getUserTypeString() + "</td>" );
-				out.print("<input type='hidden' name='userIdHidden' value='"+userInfo.getUserId()+"' />");
-				
 				if(userInfo.getUserType() != userType.admin.value)
 				{
+					out.print("<form name='AccountsForm' action='AccountServlet' method='post'>");
+					out.print("<tr>");
+					out.print("<td> " + userInfo.getUserId() + "</td>" );
+					out.print("<td> " + userInfo.getFirstName() + "</td>" );
+					out.print("<td> " + userInfo.getLastName() + "</td>" );
+					out.print("<td> " + userInfo.getUserTypeString() + "</td>" );
+					out.print("<input type='hidden' name='userIdHidden' value='"+userInfo.getUserId()+"' />");
+					out.print("<input type='hidden' name='userNameHidden' value='"+userInfo.getFirstName() + " "+ userInfo.getLastName() +"' />");
 					out.print("<td><input type='submit' name='removeUserAdmin' value='Delete' /></td>");
+					out.print("<td><input type='submit' name='messageAdmin' value='Message' /></td>");
+					out.print("</tr></form>");
 				}
-				out.print("</tr></form>");
 			}
 			
 			out.print("</table>");
