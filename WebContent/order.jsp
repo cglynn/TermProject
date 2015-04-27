@@ -78,7 +78,7 @@ else{
 						//If order has not shipped display update order button.
 						out.print("<td>");
 						out.print("<form name='UpdateOrderForm' action='PurchaseServlet' method='post'>");
-						out.print("<input type='hidden' name='orderId' value= "+ order.getOrderId() +" />");
+						out.print("<input type='hidden' name='orderId' value= '"+ order.getOrderId() +"' />");
 						out.print("<input type='submit' name='updateOrder' value='Update Order' />");
 						out.print("<input type='submit' name='deleteOrder' value='Delete Order' /></form>");
 						out.print("</td>");
