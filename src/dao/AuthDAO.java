@@ -77,7 +77,7 @@ public class AuthDAO {
 		Address address = null;
 		
 		//create query
-		String sql = "SELECT userId, userName, firstName, lastName, userType, email, phoneNumber, routingNumber, accountNumber, url, companyName, isDeleted, city, state, street, zip  FROM user WHERE userId = ?";
+		String sql = "SELECT userId, userName, firstName, lastName, userType, email, phoneNumber, routingNumber, accountNumber, url, companyName, isDeleted, city, state, street, zip, password  FROM user WHERE userId = ?";
 		
 		//create connection
 		connection = new ConnectionInfo();
@@ -95,7 +95,7 @@ public class AuthDAO {
 			if(connection.result.next()) 
 			{
 				address = new Address(connection.result.getString(13),connection.result.getString(14),connection.result.getString(15),connection.result.getString(16));
-			    user = new User(connection.result.getInt(1), connection.result.getString(2), connection.result.getString(3), connection.result.getString(4), connection.result.getInt(5), false, connection.result.getString(6), connection.result.getString(7), connection.result.getInt(8), connection.result.getInt(9), connection.result.getString(10), connection.result.getString(11), connection.result.getInt(12), address);
+			    user = new User(connection.result.getInt(1), connection.result.getString(2), connection.result.getString(3), connection.result.getString(4), connection.result.getInt(5), false, connection.result.getString(6), connection.result.getString(7), connection.result.getInt(8), connection.result.getInt(9), connection.result.getString(10), connection.result.getString(11), connection.result.getInt(12), address, connection.result.getString(13));
 			}
 			else
 			{

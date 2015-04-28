@@ -146,7 +146,7 @@ else{
 						out.print(
 					    		  "<form name='addToShoppingCart'  action='CatalogServlet' method='post'><input type ='hidden' name='productSellerId' value='" + seller.getProductSellerId() + "'><input type='submit' name='addToShoppingCart' value='Add to Shopping Cart' /></form>");
 						out.print(
-					    		  "<form name='addToWishList' action='wishList' method='post'><input type='submit' value='Add to Wish List' /></form>");
+					    		  "<form name='addToWishList' action='CatalogServlet' method='post'><input type ='hidden' name='productSellerId' value='" + seller.getProductSellerId() + "'><input type='submit' name='addToWishList' value='Add to Wish List' /></form>");
 						out.print(
 					    		  "<form name='ContactSellerForm'  action='CatalogServlet' method='post'><input type='hidden' name='sellerId' value='"+seller.getSellerId()+"'><input type='submit' name='messageSeller' value='Message Seller' /></form>");
 					        	

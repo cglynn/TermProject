@@ -16,6 +16,7 @@ public class User {
 	public String companyName;
 	public Integer isDeleted;
 	public Address mailingAddress;
+	public String password;
 
 	
 	//Default constructor
@@ -34,12 +35,13 @@ public class User {
 		url = "";
 		companyName = "";
 		isDeleted = 0;
+		password = "";
 		mailingAddress = new Address();
 	}
 	
 	//Constructor setting properties
 	public User(int userId, String userName, String firstName, String lastName, int userType, boolean loggedIn, String email, String phoneNumber, int routingNumber, int accountNumber, 
-			String url, String companyName, int isDeleted, Address address)
+			String url, String companyName, int isDeleted, Address address, String password)
 	{
 		this.userId = userId;
 		this.userName = userName;
@@ -47,7 +49,7 @@ public class User {
 		this.lastName = lastName;
 		this.userType = userType;
 		this.loggedIn = loggedIn;
-		
+		this.password = password;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.routingNumber = routingNumber;
@@ -119,6 +121,10 @@ public class User {
 
 	  public int getIsDeleted() {
 		  return isDeleted;
+	  }
+	  
+	  public String getPassword() {
+		  return password;
 	  }
 	  
 	  public Address getMailingAddress() {

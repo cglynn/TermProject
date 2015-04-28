@@ -615,7 +615,60 @@ public void addItemToList(List list) throws SQLException
 	  return list;
   }
   
-  public void addProductWishList() {
+//Add Product to Wish List.  If item already exists update quantity.
+  public void addProductWishList(int listId, int productSellerId) throws SQLException {
+			//create connection
+			connection = new ConnectionInfo();
+
+			ProductSeller productSeller = getProductSeller(productSellerId);
+			
+			int listItemId = doesItemExistInList(listId, productSeller);
+			
+			//If Entry already exists, update entry.
+			if(listItemId != -1)
+			{
+			
+				//create query
+				String sql = "UPDATE listItem SET quantity=quantity+1 WHERE listItemId = ?";
+			
+				//create prepared statement
+				connection.ps = connection.conn.prepareStatement(sql);
+				
+				//set variable in prepared statement
+				connection.ps.setInt(1, listItemId);
+				
+				int affectedRows = connection.ps.executeUpdate();
+				
+		        if (affectedRows == 0) {
+		            throw new SQLException("Updating Shopping Cart Failed, no rows affected.");
+		        }
+			}
+			//Else need to insert new row.
+			else
+			{
+				//create query
+				String sql = "Insert Into listItem (quantity, sellerId, productId, listId) Values (?,?,?,?) ";
+				
+				//create connection
+				connection = new ConnectionInfo();
+				//getConnection();
+				
+				//create prepared statement
+				connection.ps = connection.conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+				
+				//set variable in prepared statement
+				connection.ps.setInt(1, 1);
+				connection.ps.setInt(2, productSeller.getProductSellerId());
+				connection.ps.setInt(3, productSeller.getProductId());
+				connection.ps.setInt(4, listId);
+				
+		        int affectedRows = connection.ps.executeUpdate();
+
+		        if (affectedRows == 0) {
+		            throw new SQLException("Updating shopping Cart failed..");
+		        }
+			}
+	  
   }
 
   public void updateOrder(int orderId, String receiverName, String street, String city, String state, String zip) throws SQLException
@@ -915,7 +968,20 @@ public void addItemToList(List list) throws SQLException
 
   }
 
-  public void removeItemWishList() {
+  public void removeProductWishList(int listItemId) throws SQLException {
+		//create connection
+		connection = new ConnectionInfo();
+	  
+		//create query
+		String sql = "DELETE FROM listItem WHERE listItemId = ? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, listItemId);
+		
+		connection.ps.executeUpdate();
   }
 
   public void deleteOrder(int orderId) throws SQLException {
@@ -949,6 +1015,24 @@ public void addItemToList(List list) throws SQLException
 		
 		//set variable in prepared statement
 		connection.ps.setInt(1, orderId);
+		
+		connection.ps.executeUpdate();
+  }
+  
+  public void moveListItem(int listItemId, int listId) throws SQLException
+  {
+	    //create connection
+		connection = new ConnectionInfo();
+	  
+		//create query
+		String sql = "Update listItem Set listId=? Where listItemId=? ";
+		
+		//create prepared statement
+		connection.ps = connection.conn.prepareStatement(sql);
+		
+		//set variable in prepared statement
+		connection.ps.setInt(1, listId);
+		connection.ps.setInt(2, listItemId);
 		
 		connection.ps.executeUpdate();
   }

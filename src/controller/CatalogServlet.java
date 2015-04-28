@@ -110,6 +110,41 @@ public class CatalogServlet extends HttpServlet {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);
 		}
+		
+		//Check to see if Add to wish list was clicked.
+		if(request.getParameter("addToWishList") != null){
+			String msg = "";
+			String productSellerId = request.getParameter("productSellerId");
+			HttpSession session = request.getSession();
+			List wishList = (List)session.getAttribute("wishList");
+			User user = (User)session.getAttribute("user");
+			CatalogDAO catalogData = new CatalogDAO();
+		
+				try {
+					catalogData.addProductWishList(wishList.getListId(), Integer.parseInt(productSellerId));
+				} catch (NumberFormatException | SQLException e1) {
+					msg = msg + " Sql Exception " + e1.toString();
+					e1.printStackTrace();
+				}
+				
+				//Update in memory shopping cart
+				try {
+					wishList = catalogData.getWishList(user.getUserId());
+				} catch (SQLException e1) {
+					msg = msg + " Sql Exception " + e1.toString();
+					e1.printStackTrace();
+				}
+				session.setAttribute("wishList", wishList);
+
+			try {
+				catalogData.connection.DB_Close();
+			} catch (Throwable e) {
+				
+				e.printStackTrace();
+			}
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
+			dispatcher.forward(request,  response);
+		}
 	}
 
 }
