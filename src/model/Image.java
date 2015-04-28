@@ -10,7 +10,7 @@ public class Image {
 
 
   public String getLocation() {
-	  return location;
+	  return this.location;
   }
 
   public Image() {
@@ -25,7 +25,12 @@ public class Image {
 	  this.productId = productId;
   }
 
-  public void getProductId() {
+  public int getProductId() {
+	  return this.productId;
+  }
+  
+  public int getImageId() {
+	  return this.imageId;
   }
 
 }

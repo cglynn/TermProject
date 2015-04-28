@@ -1050,9 +1050,6 @@ public void addItemToList(List list) throws SQLException
 		
 		connection.ps.executeUpdate();
   }
-
-  public void removeProductFromOrder() {
-  }
   
   public void deleteProduct(int productId) throws SQLException {
 		//create connection

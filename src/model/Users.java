@@ -10,13 +10,15 @@ public class Users {
    * @element-type Message
    */
   public Vector<User>  users;
-
-  public void messages() {
-  }
   
   public ListIterator<User> getUsers()
   {
 	  return users.listIterator();
+  }
+  
+  public Users()
+  {
+	  
   }
 
 }
