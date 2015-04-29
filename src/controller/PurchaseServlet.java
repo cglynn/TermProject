@@ -27,6 +27,7 @@ import dao.AuthDAO;
 import dao.MessageDAO;
 import enums.Admin;
 import enums.ListType;
+import enums.userType;
 
 /**
  * Servlet implementation class PurchaseServlet
@@ -261,9 +262,22 @@ public class PurchaseServlet extends HttpServlet {
 						int userId = user.getUserId();
 						int orderId = Integer.parseInt((String)session.getAttribute("orderId"));
 						data.updateOrder(orderId,  receiverName,  street, city, state, zip);
+						int currentUserType = user.getUserType();
+						Orders orders = null;
 						
 						//Update order info in memory
-						Orders orders = data.getBuyerOrder(userId);
+						if(currentUserType == userType.buyer.value)
+						{
+							orders = data.getBuyerOrder(userId);
+						}
+						else if(currentUserType == userType.seller.value)
+						{
+							orders = data.getSellerOrder(userId);
+						}
+						else if(currentUserType == userType.admin.value)
+						{
+							orders = data.getAdminOrder();
+						}
 						session.setAttribute("orders", orders);
 						
 						//Email Sellers that order has been updated
