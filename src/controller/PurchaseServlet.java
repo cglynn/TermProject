@@ -101,6 +101,9 @@ public class PurchaseServlet extends HttpServlet {
 				session.setAttribute("orders", orders);
 				request.setAttribute("msg", msg);
 				
+				msg = "Order Deleted Successfully!";
+				request.setAttribute("msg", msg);
+				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");
 				dispatcher.forward(request,  response);
 			}
@@ -141,6 +144,9 @@ public class PurchaseServlet extends HttpServlet {
 				}
 				
 				session.setAttribute("orders", orders);
+				request.setAttribute("msg", msg);
+				
+				msg = "Order Shipped Successfully!";
 				request.setAttribute("msg", msg);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/order.jsp");

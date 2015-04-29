@@ -178,6 +178,10 @@ public class ShoppingCartServlet extends HttpServlet {
 				
 				e.printStackTrace();
 			}
+			
+			msg = "Product added to shopping cart successfully!";
+			request.setAttribute("msg", msg);
+			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/wishList.jsp");
 			dispatcher.forward(request,  response);
 		}

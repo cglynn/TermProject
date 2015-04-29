@@ -100,10 +100,8 @@ public class EditProductServlet extends HttpServlet {
 				}
 				session.setAttribute("catalog", catalog);
 				
-				//If issues with form display message
-				if(!msg.equals("")){
-					request.setAttribute("msg", msg);
-				}
+				msg = "Product Information Updated Successfully!";
+				request.setAttribute("msg", msg);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
 				dispatcher.forward(request,  response);
@@ -205,10 +203,8 @@ public class EditProductServlet extends HttpServlet {
 				}
 				session.setAttribute("catalog", catalog);
 				
-				//If issues with form display message
-				if(!msg.equals("")){
-					request.setAttribute("msg", msg);
-				}
+				msg = "Seller Information updated successfully!!";
+				request.setAttribute("msg", msg);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/editProduct.jsp");
 				dispatcher.forward(request,  response);
@@ -250,6 +246,8 @@ public class EditProductServlet extends HttpServlet {
 			}
 			session.setAttribute("catalog", catalog);
 			
+			msg = "Product deleted Successfully!";
+			request.setAttribute("msg", msg);
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);

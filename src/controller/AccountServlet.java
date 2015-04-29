@@ -234,7 +234,7 @@ public class AccountServlet extends HttpServlet {
 
 		
 		//If request Seller Account Clicked
-		//If update account Clicked
+		
 		if(request.getParameter("requestSellerAccountClick") != null)
 		{
 			String msg = "";
@@ -387,6 +387,9 @@ public class AccountServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
+			
+			msg = "Request Submitted Successfully!";
+			request.setAttribute("msg", msg);
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/requestSeller.jsp");
 			dispatcher.forward(request,  response);

@@ -88,7 +88,7 @@ public class ReviewServlet extends HttpServlet {
 				
 			}
 			
-				msg = "Rating saved successfully!";
+				msg = "Rating and Review saved successfully!";
 				try {
 					data.connection.DB_Close();
 				} catch (Throwable e) {

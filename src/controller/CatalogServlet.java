@@ -107,6 +107,10 @@ public class CatalogServlet extends HttpServlet {
 				
 				e.printStackTrace();
 			}
+			
+			msg = "Product successfully added to shopping cart!";
+			request.setAttribute("msg", msg);
+			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);
 		}
@@ -142,6 +146,10 @@ public class CatalogServlet extends HttpServlet {
 				
 				e.printStackTrace();
 			}
+			
+			msg = "Product successfully added to wish list!";
+			request.setAttribute("msg", msg);
+			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/catalog.jsp");
 			dispatcher.forward(request,  response);
 		}
