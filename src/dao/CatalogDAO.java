@@ -729,7 +729,7 @@ public void addItemToList(List list) throws SQLException
       int affectedRows = connection.ps.executeUpdate();
 
       if (affectedRows == 0) {
-          throw new SQLException("Creating user failed, no rows affected.");
+          throw new SQLException("Creating order failed, no rows affected.");
       }
 
       try (ResultSet generatedKeys = connection.ps.getGeneratedKeys()) {
@@ -737,7 +737,7 @@ public void addItemToList(List list) throws SQLException
               orderId = generatedKeys.getInt(1);
           }
           else {
-              throw new SQLException("Creating user failed, no ID obtained.");
+              throw new SQLException("Creating order failed, no ID obtained.");
           }
       }
 
