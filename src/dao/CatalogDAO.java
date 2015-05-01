@@ -764,6 +764,7 @@ public void addItemToList(List list) throws SQLException
 		
 		Orders orders = new Orders();
 		orders.orders = new Vector<Order>();
+		List list = null;
 		
 		try {
 			while(connection.result.next()) 
@@ -772,7 +773,7 @@ public void addItemToList(List list) throws SQLException
 				String state = connection.result.getString(2);
 				String street = connection.result.getString(3);
 				String zip = connection.result.getString(4);
-				int listId = connection.result.getInt(5);
+				//int listId = connection.result.getInt(5);
 				String receiverName = connection.result.getString(6);
 				double tax = connection.result.getDouble(7);
 				double totalPrice = connection.result.getDouble(8);
@@ -781,7 +782,7 @@ public void addItemToList(List list) throws SQLException
 				int shippingStatus = connection.result.getInt(11);
 
 				Address shipping = new Address(city, state, street, zip);
-				List list = getListByListId(listId);
+				//List list = getListByListId(listId);
 				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, userId);
 				orders.orders.add(order);
 			}
@@ -813,6 +814,7 @@ public void addItemToList(List list) throws SQLException
 		
 		Orders orders = new Orders();
 		orders.orders = new Vector<Order>();
+		List list = null;
 		
 		try {
 			while(connection.result.next()) 
@@ -821,7 +823,7 @@ public void addItemToList(List list) throws SQLException
 				String state = connection.result.getString(2);
 				String street = connection.result.getString(3);
 				String zip = connection.result.getString(4);
-				int listId = connection.result.getInt(5);
+				//int listId = connection.result.getInt(5);
 				String receiverName = connection.result.getString(6);
 				double tax = connection.result.getDouble(7);
 				double totalPrice = connection.result.getDouble(8);
@@ -831,7 +833,7 @@ public void addItemToList(List list) throws SQLException
 				int ownerId = connection.result.getInt(12);
 
 				Address shipping = new Address(city, state, street, zip);
-				List list = getListByListId(listId);
+				//List list = getListByListId(listId);
 				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, ownerId);
 				orders.orders.add(order);
 			}
@@ -859,6 +861,8 @@ public void addItemToList(List list) throws SQLException
 		
 		Orders orders = new Orders();
 		orders.orders = new Vector<Order>();
+		Order order = null;
+		List list = null;
 		
 		try {
 			while(connection.result.next()) 
@@ -867,7 +871,7 @@ public void addItemToList(List list) throws SQLException
 				String state = connection.result.getString(2);
 				String street = connection.result.getString(3);
 				String zip = connection.result.getString(4);
-				int listId = connection.result.getInt(5);
+				//int listId = connection.result.getInt(5);
 				String receiverName = connection.result.getString(6);
 				double tax = connection.result.getDouble(7);
 				double totalPrice = connection.result.getDouble(8);
@@ -877,8 +881,8 @@ public void addItemToList(List list) throws SQLException
 				int ownerId = connection.result.getInt(12);
 
 				Address shipping = new Address(city, state, street, zip);
-				List list = getListByListId(listId);
-				Order order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, ownerId);
+				//List list = getListByListId(listId);
+				order = new Order(receiverName, tax, totalPrice, time, orderId, shippingStatus, shipping, list, ownerId);
 				orders.orders.add(order);
 			}
 		}
