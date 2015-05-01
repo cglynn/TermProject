@@ -449,6 +449,7 @@ public class PurchaseServlet extends HttpServlet {
 								ListItem item = new ListItem();
 								Product product = new Product();
 								ProductSeller seller = new ProductSeller();
+								Set<Integer> sellerSet = new HashSet<Integer>();
 								
 								while(items.hasNext())
 								{
@@ -458,6 +459,7 @@ public class PurchaseServlet extends HttpServlet {
 									item.price = seller.getPrice();
 									item.shippingPrice = seller.getShippingCost();
 									data.updateListItemPrices(item);
+									sellerSet.add(seller.getSellerId());
 								}
 								
 								//Switch Shopping list to Order list
@@ -465,6 +467,18 @@ public class PurchaseServlet extends HttpServlet {
 
 								msg = "Order Created Successfully";
 								request.setAttribute("msg", msg);
+								
+								//Message Sellers of order
+								String message = "Order " + orderId + " has been submitted.";
+								Integer sellerId = -1;
+								Iterator<Integer> sellerIds = sellerSet.iterator();
+								MessageDAO messageData = new MessageDAO();
+								while(sellerIds.hasNext())
+								{
+									sellerId = sellerIds.next();
+									messageData.sendMessage(sellerId, Admin.Admin.value, message);
+								}
+								messageData.connection.DB_Close();
 								
 								//Load Orders
 								Orders orders = new Orders();

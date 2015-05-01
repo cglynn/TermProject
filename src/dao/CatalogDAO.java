@@ -796,7 +796,7 @@ public void addItemToList(List list) throws SQLException
   public Orders getSellerOrder(int userId) throws SQLException {
 
 		//create query
-		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus, ownerId FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId = (select productSellerId from productSeller where productSellerId = ?)))order by orderId desc ";
+		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus, ownerId FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId in (select productSellerId from productSeller where sellerId = ?)))order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();
