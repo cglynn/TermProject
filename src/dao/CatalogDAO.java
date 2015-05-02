@@ -747,7 +747,7 @@ public void addItemToList(List list) throws SQLException
   public Orders getBuyerOrder(int userId) throws SQLException {
 
 		//create query
-		String sql = "Select  city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus FROM orders o JOIN list l on o.orderId = l.orderId WHERE ownerId = ? order by orderId desc ";
+		String sql = "Select  city, state, street, zip, receiverName, tax, totalPrice, time, orderId, shippingStatus FROM orders  WHERE buyerId = ? order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();
@@ -774,12 +774,12 @@ public void addItemToList(List list) throws SQLException
 				String street = connection.result.getString(3);
 				String zip = connection.result.getString(4);
 				//int listId = connection.result.getInt(5);
-				String receiverName = connection.result.getString(6);
-				double tax = connection.result.getDouble(7);
-				double totalPrice = connection.result.getDouble(8);
-				String time = connection.result.getString(9);
-				int orderId = connection.result.getInt(10);
-				int shippingStatus = connection.result.getInt(11);
+				String receiverName = connection.result.getString(5);
+				double tax = connection.result.getDouble(6);
+				double totalPrice = connection.result.getDouble(7);
+				String time = connection.result.getString(8);
+				int orderId = connection.result.getInt(9);
+				int shippingStatus = connection.result.getInt(10);
 
 				Address shipping = new Address(city, state, street, zip);
 				//List list = getListByListId(listId);
@@ -797,7 +797,7 @@ public void addItemToList(List list) throws SQLException
   public Orders getSellerOrder(int userId) throws SQLException {
 
 		//create query
-		String sql = "Select city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus, ownerId FROM orders o JOIN list l on o.orderId = l.orderId WHERE o.orderId in(select orderId from list where listId in (select listId from listItem where sellerId in (select productSellerId from productSeller where sellerId = ?)))order by orderId desc ";
+		String sql = "Select city, state, street, zip, receiverName, tax, totalPrice, time, orderId, shippingStatus, buyerId FROM orders  WHERE orderId in(select orderId from list where listId in (select listId from listItem where sellerId in (select productSellerId from productSeller where sellerId = ?)))order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();
@@ -824,13 +824,13 @@ public void addItemToList(List list) throws SQLException
 				String street = connection.result.getString(3);
 				String zip = connection.result.getString(4);
 				//int listId = connection.result.getInt(5);
-				String receiverName = connection.result.getString(6);
-				double tax = connection.result.getDouble(7);
-				double totalPrice = connection.result.getDouble(8);
-				String time = connection.result.getString(9);
-				int orderId = connection.result.getInt(10);
-				int shippingStatus = connection.result.getInt(11);
-				int ownerId = connection.result.getInt(12);
+				String receiverName = connection.result.getString(5);
+				double tax = connection.result.getDouble(6);
+				double totalPrice = connection.result.getDouble(7);
+				String time = connection.result.getString(8);
+				int orderId = connection.result.getInt(9);
+				int shippingStatus = connection.result.getInt(10);
+				int ownerId = connection.result.getInt(11);
 
 				Address shipping = new Address(city, state, street, zip);
 				//List list = getListByListId(listId);
@@ -848,7 +848,7 @@ public void addItemToList(List list) throws SQLException
   public Orders getAdminOrder() throws SQLException {
 
 		//create query
-		String sql = "Select  city, state, street, zip, l.listId, receiverName, tax, totalPrice, time, o.orderId, shippingStatus, ownerId FROM orders o JOIN list l on o.orderId = l.orderId order by orderId desc ";
+		String sql = "Select  city, state, street, zip,  receiverName, tax, totalPrice, time, orderId, shippingStatus, buyerId FROM orders order by orderId desc ";
 		
 		//create connection
 		connection = new ConnectionInfo();
@@ -872,13 +872,13 @@ public void addItemToList(List list) throws SQLException
 				String street = connection.result.getString(3);
 				String zip = connection.result.getString(4);
 				//int listId = connection.result.getInt(5);
-				String receiverName = connection.result.getString(6);
-				double tax = connection.result.getDouble(7);
-				double totalPrice = connection.result.getDouble(8);
-				String time = connection.result.getString(9);
-				int orderId = connection.result.getInt(10);
-				int shippingStatus = connection.result.getInt(11);
-				int ownerId = connection.result.getInt(12);
+				String receiverName = connection.result.getString(5);
+				double tax = connection.result.getDouble(6);
+				double totalPrice = connection.result.getDouble(7);
+				String time = connection.result.getString(8);
+				int orderId = connection.result.getInt(9);
+				int shippingStatus = connection.result.getInt(10);
+				int ownerId = connection.result.getInt(11);
 
 				Address shipping = new Address(city, state, street, zip);
 				//List list = getListByListId(listId);

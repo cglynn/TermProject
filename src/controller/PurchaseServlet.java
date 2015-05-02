@@ -90,10 +90,21 @@ public class PurchaseServlet extends HttpServlet {
 					msg = "SQL Exception " + e.toString();
 					e.printStackTrace();
 				}
-				//Reload orders
+				
+				
 				Orders orders = null;
+				
+				//Reload buyer orders
 				try {
 					 orders = data.getSellerOrder(user.getUserId());
+				} catch (SQLException e) {
+					msg = "SQL Exception " + e.toString();
+					e.printStackTrace();
+				}
+				
+				//Reload Admin Orders
+				try {
+					 orders = data.getAdminOrder();
 				} catch (SQLException e) {
 					msg = "SQL Exception " + e.toString();
 					e.printStackTrace();
