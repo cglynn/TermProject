@@ -91,6 +91,24 @@ public class Product {
 	  while(sellersIterator.hasNext())
 	  {
 		  temp = sellersIterator.next();
+		  if(temp.getProductSellerId() == sellerId)
+		  {
+			  seller = temp;
+			  break;
+		  }
+	  }
+	  temp = null;
+	  return seller;
+  }
+  
+  //Returns productSeller data if exists, else null
+  public ProductSeller getProductSellerBySellerId(int sellerId) {
+	  ProductSeller seller = null;
+	  ProductSeller temp = null;
+	  ListIterator<ProductSeller> sellersIterator = sellers.listIterator();
+	  while(sellersIterator.hasNext())
+	  {
+		  temp = sellersIterator.next();
 		  if(temp.getSellerId() == sellerId)
 		  {
 			  seller = temp;

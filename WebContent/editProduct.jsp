@@ -103,7 +103,7 @@ else{
 				//If Seller.  Display option to update Seller Fields.
 				if(user.getUserType() == userType.seller.value)
 				{
-					ProductSeller seller = product.getProductSellerById(user.getUserId());
+					ProductSeller seller = product.getProductSellerBySellerId(user.getUserId());
 					//If seller already sells product pre-populate fields.
 					if(seller != null)
 					{
