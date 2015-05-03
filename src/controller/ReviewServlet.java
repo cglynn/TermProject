@@ -56,48 +56,50 @@ public class ReviewServlet extends HttpServlet {
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/review.jsp");
 				dispatcher.forward(request,  response);
 			}
-			CatalogDAO dataCatalog = new CatalogDAO();
-			try {
-				dataCatalog.reviewProduct(productId, ranking, review);
-				dataCatalog.connection.DB_Close();
-			} catch (SQLException e) {
-				msg = msg + " Sql Exception " + e.toString();
-				e.printStackTrace();
-			} catch (Throwable e) {
-				msg = msg + " Sql Exception " + e.toString();
-				e.printStackTrace();
-			}
-			
-			//Mail all sellers of product.
-			Catalog catalog = (Catalog)session.getAttribute("catalog");
-			Product product = catalog.getProductById(productId);
-			ListIterator<ProductSeller> sellers = product.getSellers();
-			ProductSeller seller = null;
-			MessageDAO data = new MessageDAO();
-			User user = (User)session.getAttribute("user");
-			String message = "Your product: " + product.getName() + " was reviewed";
-			while(sellers.hasNext())
-			{
-				seller = sellers.next();
+			else{
+				CatalogDAO dataCatalog = new CatalogDAO();
 				try {
-					data.sendMessage(seller.getSellerId(), user.getUserId() , message);
+					dataCatalog.reviewProduct(productId, ranking, review);
+					dataCatalog.connection.DB_Close();
 				} catch (SQLException e) {
 					msg = msg + " Sql Exception " + e.toString();
 					e.printStackTrace();
-				}
-				
-			}
-			
-				msg = "Rating and Review saved successfully!";
-				try {
-					data.connection.DB_Close();
 				} catch (Throwable e) {
 					msg = msg + " Sql Exception " + e.toString();
 					e.printStackTrace();
 				}
-				request.setAttribute("msg", msg);
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/review.jsp");
-				dispatcher.forward(request,  response);
+				
+				//Mail all sellers of product.
+				Catalog catalog = (Catalog)session.getAttribute("catalog");
+				Product product = catalog.getProductById(productId);
+				ListIterator<ProductSeller> sellers = product.getSellers();
+				ProductSeller seller = null;
+				MessageDAO data = new MessageDAO();
+				User user = (User)session.getAttribute("user");
+				String message = "Your product: " + product.getName() + " was reviewed";
+				while(sellers.hasNext())
+				{
+					seller = sellers.next();
+					try {
+						data.sendMessage(seller.getSellerId(), user.getUserId() , message);
+					} catch (SQLException e) {
+						msg = msg + " Sql Exception " + e.toString();
+						e.printStackTrace();
+					}
+					
+				}
+				
+					msg = "Rating and Review saved successfully!";
+					try {
+						data.connection.DB_Close();
+					} catch (Throwable e) {
+						msg = msg + " Sql Exception " + e.toString();
+						e.printStackTrace();
+					}
+					request.setAttribute("msg", msg);
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/review.jsp");
+					dispatcher.forward(request,  response);
+			}
 		}
 		
 	}
